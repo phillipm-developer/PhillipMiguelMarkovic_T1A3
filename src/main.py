@@ -19,11 +19,25 @@ args_dict = vars(args)
 
 # exp = "-sin(90) + 5^2 +10  *6+2-10*4 * (7-8)*-sin(45)"
 
-exp = "(12-7)*-sin(30)"
+# exp = "(12-7)*-sin(30)"
 
-expression = expression.Expression(exp)
-# expression.assign_infix_list()
-print(expression.get_infix_list())
+exp = ""
+equation = []
+
+# while (True):
+#     exp = input("Please enter an expression> ")
+#     equation = expression.Expression(exp)
+#     print(equation.get_infix_list())
+
+try:
+    # exp = ")99"
+    exp = "(12-7)*-sin(30)-"
+    equation = expression.Expression(exp)
+    equation.assign_infix_list()
+except expression.syntax_exception.SyntaxException as err:
+    print(err.get_message())
+
+
 
 # print(expression)
 
