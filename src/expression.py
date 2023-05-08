@@ -1,12 +1,14 @@
 import math_exception
 import syntax_exception
 import math
+import numbers
 
 class Expression:
     def __init__(self, expression):
         self.expression = expression
         self.infix_list = []
         self.postfix_list = []
+        self.evaluate_list = []
 
         self.operator_list = [
             "",
@@ -33,6 +35,32 @@ class Expression:
     # End-user readable representation of the object
     def __str__(self):
         return self.expression
+
+    def extract_variable_names(self):
+        variable_names = {}
+        for index, element in enumerate(self.postfix_list):
+            if element not in self.operator_list and not is
+                if element not in variable_names.items():
+                    variable_names[element] = 'NONE'
+        return variable_names
+
+
+    # def evaluate_dict(self, substitution_dict):
+    #     self.evaluate_list.append(substitution_dict)
+    #     self.evaluate_list_of_values(self.evaluate_list)
+        # for key, value in substitution_dict.items():
+        #     for index, element in enumerate(self.postfix_list):                
+        #         if element == key:
+        #             self.postfix_list[index] = value
+
+    # def evaluate_list_of_values(self, substitution_list):
+    #     for index, substitution_dict in enumerate(self.evaluate_list):
+    #         postfix_list = self.postfix_list
+    #         for key, value in substitution_dict.items():
+    #             for index, element in enumerate(self.postfix_list):                
+    #                 if element == key:
+    #                     postfix_list[index] = value
+    #         substitution_dict["result"] = self.evaluate()
 
     def evaluate(self):
         operand_stack = []

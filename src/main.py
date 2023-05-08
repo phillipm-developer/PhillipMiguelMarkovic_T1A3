@@ -32,12 +32,38 @@ equation = []
 try:
     # exp = ")99"
     # exp = "(12-7)*-sin(30)-"
-    exp = "(12-7)*-sin(30)"
+    # exp = "(12-7)*-sin(30)"
+    exp = "x^2+2*x+1"
+
+    substitutions = {
+        "x" : "100"
+    }
+
+    calculation_dict = {
+        'equation' : 'x^2+2*x+1',
+        'result' : 'NONE',
+        'solved' : False
+    }
+
+    calculation_dict['substitutions'] = substitutions
+
+    print(calculation_dict)
+
+    evaluation_list = []
+    evaluation_list.append(calculation_dict)
+
     equation = expression.Expression(exp)
     print(equation.get_infix_list())
     print(equation.get_postfix_list())
-    print(equation.evaluate())
+
+    calculation_dict['substitutions'] = equation.extract_variable_names()
+    print(calculation_dict)
     
+    # print(equation.evaluate())
+    # equation.evaluate_dict(substitutions)
+    # print(equation.get_postfix_list())
+    # print(equation.evaluate())
+
 except expression.syntax_exception.SyntaxException as err:
     print(err.get_message())
 
