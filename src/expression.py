@@ -1,5 +1,6 @@
 import math_exception
 import syntax_exception
+import math
 
 class Expression:
     def __init__(self, expression):
@@ -27,11 +28,98 @@ class Expression:
         self.remove_whitespace(self.expression)
         self.values_set = False
         self.assign_infix_list(self.expression)
+        self.assign_postfix_list()
 
     # End-user readable representation of the object
     def __str__(self):
         return self.expression
 
+    def evaluate(self):
+        operand_stack = []
+        result = 0
+
+        for index, element in enumerate(self.postfix_list):
+            if not self.is_operator(element):
+                operand_stack.append(float(element))
+            else:
+                match element:
+                    case "+":
+                        op2 = operand_stack[-1]
+                        operand_stack.pop()
+                        op1 = operand_stack[-1]
+                        operand_stack.pop()
+                        temp = op1 + op2
+                        operand_stack.append(temp)
+
+                    case "-":
+                        op2 = operand_stack[-1]
+                        operand_stack.pop()
+                        op1 = operand_stack[-1]
+                        operand_stack.pop()
+                        temp = op1 - op2
+                        operand_stack.append(temp)
+
+                    case "*":
+                        op2 = operand_stack[-1]
+                        operand_stack.pop()
+                        op1 = operand_stack[-1]
+                        operand_stack.pop()
+                        temp = op1 * op2
+                        operand_stack.append(temp)
+
+                    case "/":
+                        op2 = operand_stack[-1]
+                        operand_stack.pop()
+                        op1 = operand_stack[-1]
+                        operand_stack.pop()
+
+                        if op2 == 0:
+                            raise math_exception.MathException(math_exception.ErrorType.Divide_By_Zero)
+                        
+                        temp = op1 / op2
+                        operand_stack.append(temp)
+
+                    case "^":
+                        op2 = operand_stack[-1]
+                        operand_stack.pop()
+                        op1 = operand_stack[-1]
+                        operand_stack.pop()
+                        temp = pow(op1, op2)
+                        operand_stack.append(temp)
+
+                    case "sin":
+                        op1 = operand_stack[-1]
+                        operand_stack.pop()
+                        temp = math.sin(op1)
+                        operand_stack.append(temp)
+
+                    case "cos":
+                        op1 = operand_stack[-1]
+                        operand_stack.pop()
+                        temp = math.cos(op1)
+                        operand_stack.append(temp)
+
+                    case "tan":
+                        op1 = operand_stack[-1]
+                        operand_stack.pop()
+                        temp = math.tan(op1)
+                        operand_stack.append(temp)
+
+                    case "sqrt":
+                        op1 = operand_stack[-1]
+                        operand_stack.pop()
+                        temp = math.sqrt(op1)
+                        operand_stack.append(temp)
+
+                    case "mu":
+                        op1 = operand_stack[-1]
+                        operand_stack.pop()
+                        temp = -1 * op1
+                        operand_stack.append(temp)
+
+        result = operand_stack[-1]
+        return result
+    
     # Converts the expression to infix form for later use
     def assign_infix_list(self, infix_string):
         token = ''  # Appended to character by character to form a string
@@ -98,11 +186,53 @@ class Expression:
 
         self.infix_list = vtemp
 
+    # Convert from infix to postfix form and store in posfix_list
+    def assign_postfix_list(self):
+        operator_stack = []
+
+        for index, element in enumerate(self.infix_list):
+            if not self.is_operator(element):
+                self.postfix_list.append(element)
+            else:
+                if len(operator_stack) == 0:
+                    operator_stack.append(element)
+                elif element == "(":
+                    operator_stack.append(element)
+                elif self.precedence_level(element) > self.precedence_level(operator_stack[-1]):
+                    operator_stack.append(element)
+                elif element == ")":
+                    while operator_stack[-1] != "(":    # Pop all the stack operators until "("
+                        self.postfix_list.append(operator_stack[-1])
+                        operator_stack.pop()
+                    operator_stack.pop()  # Pop the '(' operator
+                else:
+                    while len(operator_stack) > 0 and operator_stack[-1] != "(" and self.precedence_level(operator_stack[-1]) >= self.precedence_level(element):
+                        self.postfix_list.append(operator_stack[-1])
+                        operator_stack.pop()
+
+                    operator_stack.append(element)
+
+        while len(operator_stack) > 0:
+            self.postfix_list.append(operator_stack[-1])
+            operator_stack.pop()
+
+    def precedence_level(self, operator):
+        if operator == "(" or operator == ")":
+            return 0
+        elif operator == "+" or operator == "-":
+            return 1
+        elif operator == "^":
+            return 3
+        elif operator == "sin" or operator == "cos" or operator == "tan" or operator == "sqrt" or operator == "mu":
+            return 4
+        else:
+            return 2
+
     def get_infix_list(self):
         return self.infix_list
     
-    def assign_postfix_list(self):
-        pass
+    def get_postfix_list(self):
+        return self.postfix_list
 
     # Tests is the string token is in the operator list (and therefore a legit operator)
     def is_operator(self, token):

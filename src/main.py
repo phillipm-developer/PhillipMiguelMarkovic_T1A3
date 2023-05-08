@@ -31,9 +31,13 @@ equation = []
 
 try:
     # exp = ")99"
-    exp = "(12-7)*-sin(30)-"
+    # exp = "(12-7)*-sin(30)-"
+    exp = "(12-7)*-sin(30)"
     equation = expression.Expression(exp)
-    equation.assign_infix_list()
+    print(equation.get_infix_list())
+    print(equation.get_postfix_list())
+    print(equation.evaluate())
+    
 except expression.syntax_exception.SyntaxException as err:
     print(err.get_message())
 

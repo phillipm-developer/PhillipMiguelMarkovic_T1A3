@@ -5,7 +5,7 @@ class ErrorType(Enum):
     Values_Not_Set = 2
 
 class MathException(Exception):
-    def __init__(self, infix_list, index, error_type):
+    def __init__(self, error_type):
         self.error_message = ""
 
         match error_type:
