@@ -83,6 +83,7 @@ class Expression:
     #                     postfix_list[index] = value
     #         substitution_dict["result"] = self.evaluate()
 
+    # Evaluates the postfix list
     def evaluate(self, postfix_list):
         operand_stack = []
         result = 0

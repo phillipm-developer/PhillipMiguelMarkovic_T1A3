@@ -68,7 +68,60 @@ def interactive_mode():
         except expression.syntax_exception.SyntaxException as err:
             print(err.get_message())
 
-if args_dict['inputfile'] != 'None':
-    input_file = args_dict['inputfile']
+def process_csv_file():
+    output_list = []
 
-interactive_mode()
+    # Open the input csv file and read each row from it
+    with open('input.csv') as f:
+        reader = csv.DictReader(f)
+        for row in reader:
+
+            equation = expression.Expression(row['equation'])
+
+            # Begin constructing the calculation dictionary which will be passed into Expression
+            calculation_dict = {
+                'equation' : f"{equation}",
+                'result' : 'NONE',
+                'solved' : False,
+                'values_obtained' : False
+            }
+
+            # Extract variable names from the equation
+            substitutions = equation.extract_variable_names()
+
+            # Assign input values to the variables from the file
+            for key in substitutions:
+                substitutions[key] = row[key]
+
+            # Assign substitutions dictionary back into the calculation dictionary with values set                
+            calculation_dict['substitutions'] = substitutions
+            calculation_dict['values_obtained'] = True
+
+            # Evaluate the euqation using the data in the calculation dictionary and set the result
+            calculation_dict = equation.evaluate_calc_dict(calculation_dict)
+            print(calculation_dict)
+
+            row['result'] = calculation_dict['result']
+            print(row)
+            output_list.append(row)
+
+    f.close()  # Close the file handle for the input file
+
+    # Open the output file and write the header and the results
+    with open('output.csv', 'w') as f:
+        writer = csv.DictWriter(f, output_list[0].keys())
+        writer.writeheader()
+        writer.writerows(output_list)
+
+    f.close()  # Close the file handle for the output file
+
+
+def process_json_file():
+    pass
+
+# if args_dict['inputfile'] != 'None':
+#     input_file = args_dict['inputfile']
+
+process_csv_file()
+
+# interactive_mode()
