@@ -52,13 +52,27 @@ class Expression:
         return variable_names
 
 
+    # This returns a calculation dictionary with the result of the calculation
+    def evaluate_calc_dict(self, calculation_dict):
+        postfix_list = self.postfix_list
+        substitutions = calculation_dict['substitutions']
+        for key, value in substitutions.items():
+            for index, element in enumerate(self.postfix_list):
+                if element == key:
+                    self.postfix_list[index] = value
+        result = self.evaluate(postfix_list)
+        calculation_dict['result'] = result
+        calculation_dict['solved'] = True
+        return calculation_dict
+
+
     # def evaluate_dict(self, substitution_dict):
     #     self.evaluate_list.append(substitution_dict)
     #     self.evaluate_list_of_values(self.evaluate_list)
-        # for key, value in substitution_dict.items():
-        #     for index, element in enumerate(self.postfix_list):                
-        #         if element == key:
-        #             self.postfix_list[index] = value
+    #     for key, value in substitution_dict.items():
+    #         for index, element in enumerate(self.postfix_list):                
+    #             if element == key:
+    #                 self.postfix_list[index] = value
 
     # def evaluate_list_of_values(self, substitution_list):
     #     for index, substitution_dict in enumerate(self.evaluate_list):
@@ -69,11 +83,11 @@ class Expression:
     #                     postfix_list[index] = value
     #         substitution_dict["result"] = self.evaluate()
 
-    def evaluate(self):
+    def evaluate(self, postfix_list):
         operand_stack = []
         result = 0
 
-        for index, element in enumerate(self.postfix_list):
+        for index, element in enumerate(postfix_list):
             if not self.is_operator(element):
                 operand_stack.append(float(element))
             else:
@@ -305,6 +319,7 @@ class Expression:
     # Remove any whitespace from the expression string up front.
     def remove_whitespace(self, expression):
         self.expression = expression.replace(" ", "")
+        return self.expression
 
     # Chceks if the string expression is properly formatted, otherwise raise an exception
     def check_syntax(self, infix_list):

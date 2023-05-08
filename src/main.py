@@ -1,5 +1,6 @@
 import expression
 import argparse
+import csv
 
 def isfloat(num):
     try:
@@ -24,62 +25,50 @@ args = parser.parse_args()
 args_dict = vars(args)
 # print(args_dict)
 
-# exp = "-sin(90) + xx^2 +10  *x+2-10*zz * (7-8)*-sin(45)"
-
-# exp = "-sin(90) + 5^2 +10  *6+2-10*4 * (7-8)*-sin(45)"
-
-# exp = "(12-7)*-sin(30)"
-
 exp = ""
 equation = []
 
-# while (True):
-#     exp = input("Please enter an expression> ")
-#     equation = expression.Expression(exp)
-#     print(equation.get_infix_list())
+def interactive_mode():
+    while (True):
+        try:
+            exp = input("Please enter an expression> ")
 
-try:
-    # exp = ")99"
-    # exp = "(12-7)*-sin(30)-"
-    # exp = "(12-7)*-sin(30)"
-    exp = "x^2+2*x+1"
+            equation = expression.Expression(exp)
 
-    substitutions = {
-        "x" : "100"
-    }
+            calculation_dict = {
+                'equation' : f"{equation}",
+                'result' : 'NONE',
+                'solved' : False,
+                'values_obtained' : False
+            }
 
-    calculation_dict = {
-        'equation' : 'x^2+2*x+1',
-        'result' : 'NONE',
-        'solved' : False
-    }
+            substitutions = equation.extract_variable_names()
+            calculation_dict['substitutions'] = substitutions
 
-    calculation_dict['substitutions'] = substitutions
+            print(calculation_dict)
 
-    print(calculation_dict)
+            if calculation_dict['values_obtained'] == False:
+                substitutions = calculation_dict['substitutions']
+                for key in substitutions:
+                    value = input(f"Please enter the value for {key}> ")
+                    substitutions[key] = value
+                calculation_dict['substitutions'] = substitutions
+                calculation_dict['values_obtained'] = True
 
-    evaluation_list = []
-    evaluation_list.append(calculation_dict)
+            calculation_dict = equation.evaluate_calc_dict(calculation_dict)
 
-    equation = expression.Expression(exp)
-    print(equation.get_infix_list())
-    print(equation.get_postfix_list())
+            evaluation_list = []
+            evaluation_list.append(calculation_dict)
 
-    calculation_dict['substitutions'] = equation.extract_variable_names()
-    print(calculation_dict)
+            # print(equation.get_infix_list())
+            # print(equation.get_postfix_list())
 
-    # print(equation.evaluate())
-    # equation.evaluate_dict(substitutions)
-    # print(equation.get_postfix_list())
-    # print(equation.evaluate())
+            print(calculation_dict)
 
-except expression.syntax_exception.SyntaxException as err:
-    print(err.get_message())
+        except expression.syntax_exception.SyntaxException as err:
+            print(err.get_message())
 
+if args_dict['inputfile'] != 'None':
+    input_file = args_dict['inputfile']
 
-
-# print(expression)
-
-# print(exp)
-# print(exp.replace(" ", ""))
-# print(exp)
+interactive_mode()
