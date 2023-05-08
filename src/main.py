@@ -1,6 +1,7 @@
 import expression
 import argparse
 import csv
+import json
 
 def isfloat(num):
     try:
@@ -60,9 +61,6 @@ def interactive_mode():
             evaluation_list = []
             evaluation_list.append(calculation_dict)
 
-            # print(equation.get_infix_list())
-            # print(equation.get_postfix_list())
-
             print(calculation_dict)
 
         except expression.syntax_exception.SyntaxException as err:
@@ -117,11 +115,23 @@ def process_csv_file():
 
 
 def process_json_file():
-    pass
+    with open('input.json', 'r') as f:
+        data = json.load(f)
+
+    for calculation_dict in data:
+        equation = expression.Expression(calculation_dict['equation'])
+        calculation_dict = equation.evaluate_calc_dict(calculation_dict)
+        print(calculation_dict)
+
+
+    with open('output.json', 'w') as f:
+        json.dump(data, f)
 
 # if args_dict['inputfile'] != 'None':
 #     input_file = args_dict['inputfile']
 
-process_csv_file()
+# process_csv_file()
+
+process_json_file()
 
 # interactive_mode()
