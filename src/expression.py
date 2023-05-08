@@ -36,10 +36,17 @@ class Expression:
     def __str__(self):
         return self.expression
 
+    def is_float(self, num):
+        try:
+            float(num)
+            return True
+        except ValueError:
+            return False
+
     def extract_variable_names(self):
         variable_names = {}
         for index, element in enumerate(self.postfix_list):
-            if element not in self.operator_list and not is
+            if element not in self.operator_list and not self.is_float(element):
                 if element not in variable_names.items():
                     variable_names[element] = 'NONE'
         return variable_names

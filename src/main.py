@@ -1,5 +1,14 @@
 import expression
 import argparse
+
+def isfloat(num):
+    try:
+        float(num)
+        return True
+    except ValueError:
+        return False
+
+
 parser = argparse.ArgumentParser()
 
 parser.add_argument("-e", "--equation", help="Expression to evaluate")
@@ -58,7 +67,7 @@ try:
 
     calculation_dict['substitutions'] = equation.extract_variable_names()
     print(calculation_dict)
-    
+
     # print(equation.evaluate())
     # equation.evaluate_dict(substitutions)
     # print(equation.get_postfix_list())
