@@ -23,9 +23,11 @@ def interactive_mode():
         try:
             exp = input("Please enter an expression> ")
 
+            # Checks if user wants to exit the program
             if exp.lower() == "quit" or exp.lower() == "exit":
                 break
 
+            # Create an instance of an Expression object
             equation = expression.Expression(exp)
 
             # Set up a calculation dictionary
@@ -36,8 +38,10 @@ def interactive_mode():
                 'values_obtained' : False
             }
 
+            # Extract the variables from the eqaution and create a variable dictionary (substitutions)
             substitutions = equation.extract_variable_names()
             calculation_dict['substitutions'] = substitutions
+
 
             if calculation_dict['values_obtained'] == False:
                 substitutions = calculation_dict['substitutions']
@@ -49,9 +53,6 @@ def interactive_mode():
 
             calculation_dict = equation.evaluate_calc_dict(calculation_dict)
 
-            evaluation_list = []
-            evaluation_list.append(calculation_dict)
-
             print(calculation_dict['result'])
 
         except expression.syntax_exception.SyntaxException as err:
@@ -62,12 +63,13 @@ def process_json_file(input_json_file):
     with open(input_json_file, 'r') as f:
         data = json.load(f)
 
+    f.close()  # close the file as we have loaded the data
+
     # Evaluates each line (calculation dictionary) in data and writes the result back into the calcualtion dictionary
     for calculation_dict in data:
         equation = expression.Expression(calculation_dict['equation'])
         calculation_dict = equation.evaluate_calc_dict(calculation_dict)
 
-    f.close()
     return data
 
 # Write the solved equations back to an output json file
@@ -86,27 +88,34 @@ output_file = args_dict['output_file']
 output_list = []
 
 if input_file != None:  # None is a python keyword meaning null value
-    if '.json' in input_file:
-        output_list = process_json_file(input_file)
-    else:
-        print("Please ensure the you provide a JSON input file using the '.json' extension")
-
-    # Cannot specify an output file without specifying an input file on the cmd line
-    # So this code will only run if an input file is provided
-    if output_file != None:
-        if '.json' in output_file:
-            write_json_file(output_list, output_file)
+    try:
+        if '.json' in input_file:
+            output_list = process_json_file(input_file)
         else:
-            print("Please ensure the you provide a JSON output file using the '.json' extension")
-    else:
-        for dict in output_list:
-            row_string = f"EXPR: {dict['equation']}, "
-            variables = dict['substitutions']
-            variable_string = 'VARS: '
-            for key, value in variables.items():
-                variable_string += f"{key}={value}, "
-            row_string += variable_string
-            row_string += "RESULT: " + str(dict['result'])
-            print(row_string)
+            print("Please ensure the you provide a JSON input file using the '.json' extension")
+
+        # Cannot specify an output file without specifying an input file on the cmd line
+        # So this code will only run if an input file is provided
+        if output_file != None:
+            if '.json' in output_file:
+                write_json_file(output_list, output_file)
+            else:
+                print("Please ensure the you provide a JSON output file using the '.json' extension")
+        else:
+            for dict in output_list:
+                row_string = f"EXPR: {dict['equation']}, "
+                variables = dict['substitutions']
+                variable_string = 'VARS: '
+                for key, value in variables.items():
+                    variable_string += f"{key}={value}, "
+                row_string += variable_string
+                row_string += "RESULT: " + str(dict['result'])
+                print(row_string)
+
+    except FileNotFoundError as err:
+        print(err)
+    except expression.syntax_exception.SyntaxException as err:
+        print(err.get_message())
+
 else:
     interactive_mode()
