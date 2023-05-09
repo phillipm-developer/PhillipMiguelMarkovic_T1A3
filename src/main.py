@@ -77,10 +77,8 @@ def write_json_file(data, output_json_file):
     with open(output_json_file, 'w') as f:
         json.dump(data, f)
 
-
+# Assign command line parameters to a dictionary for easy program access
 args_dict = vars(args)
-# print(args_dict)
-
 
 input_file = args_dict['input_file']
 output_file = args_dict['output_file']
