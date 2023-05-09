@@ -266,6 +266,7 @@ class Expression:
             self.postfix_list.append(operator_stack[-1])
             operator_stack.pop()
 
+    # Returns a number (0-4) indictating precedence level for the operator
     def precedence_level(self, operator):
         if operator == "(" or operator == ")":
             return 0
