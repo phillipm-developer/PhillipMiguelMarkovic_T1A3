@@ -2,6 +2,7 @@ import expression
 import argparse
 import csv
 import json
+import plot_equation
 
 parser = argparse.ArgumentParser()
 
@@ -9,6 +10,7 @@ parser = argparse.ArgumentParser()
 # parser.add_argument("-v", "--value", help="Numerical value to subtitute into equation")
 # parser.add_argument("-vs", "--values", help="Solve for these values")
 
+parser.add_argument("-png", "--png_image", help="Expression to plot and save as image file")
 parser.add_argument("-i", "--input_file", type=str, help="CSV or JSON input file containing equation & values")
 parser.add_argument("-o", "--output_file", type=str, help="CSV or JSON output file for evaluated answers")
 
@@ -29,6 +31,7 @@ def interactive_mode():
 
             # Create an instance of an Expression object
             equation = expression.Expression(exp)
+            infix = equation.get_infix_list()
 
             # Set up a calculation dictionary
             calculation_dict = {
@@ -42,18 +45,27 @@ def interactive_mode():
             substitutions = equation.extract_variable_names()
             calculation_dict['substitutions'] = substitutions
 
-
+            # If the values in the equation are not set get them from the user
             if calculation_dict['values_obtained'] == False:
                 substitutions = calculation_dict['substitutions']
                 for key in substitutions:
                     value = input(f"Please enter the value for {key}> ")
+
+                    # Checks if user wants to exit the program
+                    if value.lower() == "quit" or value.lower() == "exit":
+                        return
+
+                    # Assign value to the variable 
                     substitutions[key] = value
+
                 calculation_dict['substitutions'] = substitutions
                 calculation_dict['values_obtained'] = True
 
-            calculation_dict = equation.evaluate_calc_dict(calculation_dict)
-
-            print(calculation_dict['result'])
+            try:
+                calculation_dict = equation.evaluate_calc_dict(calculation_dict)
+                print(calculation_dict['result'])
+            except ValueError as err:
+                print(err)
 
         except expression.syntax_exception.SyntaxException as err:
             print(err.get_message())
@@ -77,11 +89,13 @@ def write_json_file(data, output_json_file):
     with open(output_json_file, 'w') as f:
         json.dump(data, f)
 
+
 # Assign command line parameters to a dictionary for easy program access
 args_dict = vars(args)
 
 input_file = args_dict['input_file']
 output_file = args_dict['output_file']
+png_equation = args_dict['png_image']
 
 output_list = []
 
@@ -115,5 +129,8 @@ if input_file != None:  # None is a python keyword meaning null value
     except expression.syntax_exception.SyntaxException as err:
         print(err.get_message())
 
+elif png_equation != None:
+    plot_equation.plot_and_save(png_equation)
+    print("made it to here")
 else:
     interactive_mode()

@@ -8,7 +8,7 @@ class Expression:
         self.expression = expression
         self.infix_list = []
         self.postfix_list = []
-        self.evaluate_list = []
+        # self.evaluate_list = []
 
         self.operator_list = [
             "",
@@ -27,8 +27,20 @@ class Expression:
         ]
 
         # Initisalisation
-        self.remove_whitespace(self.expression)
         self.values_set = False
+        self.remove_whitespace(self.expression)
+        self.assign_infix_list(self.expression)
+        self.assign_postfix_list()
+
+    def parse_expression(self, expression):
+        if len(self.infix_list) > 0:
+            self.infix_list = []
+        if len(self.postfix_list) > 0:
+            self.postfix_list = []
+        
+        # Re-initialise the expression
+        self.values_set = False
+        self.remove_whitespace(self.expression)
         self.assign_infix_list(self.expression)
         self.assign_postfix_list()
 
@@ -43,6 +55,8 @@ class Expression:
         except ValueError:
             return False
 
+    # Extract all the variable name from the postfix list then create a dictionary  
+    # from them, then return said dictionary
     def extract_variable_names(self):
         variable_names = {}
         for index, element in enumerate(self.postfix_list):
@@ -50,6 +64,32 @@ class Expression:
                 if element not in variable_names.items():
                     variable_names[element] = 'NONE'
         return variable_names
+
+    # This method takes a list of values and calculates the results for each, returning the results
+    # in a list of equivalent size
+    def evaluate_list_of_values(self, value_list):
+        result_list = []
+
+        # Extract the variables from the eqaution and create a variable dictionary (substitutions)
+        substitutions = self.extract_variable_names()
+
+        if len(substitutions) > 1:
+            print("Please submit an expression with only one variable in it")
+        elif len(substitutions) == 1:
+            var_name = list(substitutions.keys())[0]
+
+            # Calculate for each value in value_list
+            for value in value_list:
+                postfix_list = []
+                postfix_list = self.postfix_list.copy()  # Local copy of postfix list
+                for index, element in enumerate(postfix_list):
+                    if element == var_name:
+                        postfix_list[index] = value
+
+                result = self.evaluate(postfix_list)        
+                result_list.append(result)
+
+        return result_list
 
 
     # This returns a calculation dictionary with the result of the calculation
