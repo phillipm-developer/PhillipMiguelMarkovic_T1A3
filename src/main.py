@@ -20,6 +20,7 @@ args = parser.parse_args()
 exp = ""
 equation = []
 
+# Function for interactive mode
 def interactive_mode():
     while (True):
         try:
@@ -130,7 +131,7 @@ if input_file != None:  # None is a python keyword meaning null value
         print(err.get_message())
 
 elif png_equation != None:
-    plot_equation.plot_and_save(png_equation)
+    plot_equation.plot_and_save(png_equation, -100, 100)
     print("made it to here")
 else:
     interactive_mode()
