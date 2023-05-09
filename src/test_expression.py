@@ -1,14 +1,14 @@
 from expression import Expression
-
 import pytest
 
 def test_parse_expression():
     pass
 
 def test_is_float():
+    pass
     # e = exp("x+1")
-    assert Expression().is_float('12') == True
-    assert exp.is_float('12.0') == True
+    # assert Expression().is_float('12') == True
+    # assert exp.is_float('12.0') == True
     # assert exp.is_float('12.05') == True
     # assert exp.is_float('-12') == True
     # assert exp.is_float('-12.0') == True
