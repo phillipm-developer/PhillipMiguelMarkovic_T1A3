@@ -5,20 +5,20 @@ def test_parse_expression():
     pass
 
 def test_is_float():
-    pass
-    # e = exp("x+1")
-    # assert Expression().is_float('12') == True
-    # assert exp.is_float('12.0') == True
-    # assert exp.is_float('12.05') == True
-    # assert exp.is_float('-12') == True
-    # assert exp.is_float('-12.0') == True
-    # assert exp.is_float('-12.55') == True
-    # assert exp.is_float('0') == True
-    # assert exp.is_float('0.0') == True
-    # assert exp.is_float('-0') == True
-    # assert exp.is_float('-0.0') == True
-    # assert exp.is_float('twelve') == False
-    # assert exp.is_float('100F') == False
+    exp = Expression("x+1")
+    assert exp.is_float('12')
+    assert exp.is_float('12.05') == True
+    assert exp.is_float('12.0') == True
+    assert exp.is_float('12.05') == True
+    assert exp.is_float('-12') == True
+    assert exp.is_float('-12.0') == True
+    assert exp.is_float('-12.55') == True
+    assert exp.is_float('0') == True
+    assert exp.is_float('0.0') == True
+    assert exp.is_float('-0') == True
+    assert exp.is_float('-0.0') == True
+    assert exp.is_float('twelve') == False
+    assert exp.is_float('100F') == False
 
 
 def text_extract_variable_names():
