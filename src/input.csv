@@ -1,7 +1,7 @@
-equation,x
-x^2+2*x+1,5
--sin(x)-cos(x)+sin(3*x),10
-2*x^3+5*x^2-3*x+10,12
-2*x^3+5*x^2-3*x+10,15
-2*x^3+5*x^2-3*x+10,20.5
-sin(x^2)+sin(x)-cos(x),7
+equation,result,solved,values_obtained,substitutions
+x^2+2*x+1,NONE,True,True,{'x': '5'}
+-sin(x)-cos(x)+sin(3*x),NONE,True,True,{'x': '10'}
+2*x^3+5*x^2-3*x+10,NONE,True,True,{'x': '12'}
+2*x^3+5*x^2-3*x+10,NONE,True,True,{'x': '15'}
+2*x^3+5*x^2-3*x+10,NONE,True,True,{'x': '20.5'}
+sin(x^2)+sin(x)-cos(x),NONE,True,True,{'x': '7'}
