@@ -8,7 +8,6 @@ class Expression:
         self.expression = expression
         self.infix_list = []
         self.postfix_list = []
-        # self.evaluate_list = []
 
         self.operator_list = [
             "",
@@ -32,11 +31,14 @@ class Expression:
         self.assign_infix_list(self.expression)
         self.assign_postfix_list()
 
+    # Allows same instance of Expression to be used with a new function
     def parse_expression(self, expression):
         if len(self.infix_list) > 0:
             self.infix_list = []
         if len(self.postfix_list) > 0:
             self.postfix_list = []
+
+        self.expression = expression
         
         # Re-initialise the expression
         self.values_set = False
@@ -48,6 +50,7 @@ class Expression:
     def __str__(self):
         return self.expression
 
+    # Utitiy function for converting strings to floats
     def is_float(self, num):
         try:
             float(num)
@@ -105,23 +108,6 @@ class Expression:
         calculation_dict['solved'] = True
         return calculation_dict
 
-
-    # def evaluate_dict(self, substitution_dict):
-    #     self.evaluate_list.append(substitution_dict)
-    #     self.evaluate_list_of_values(self.evaluate_list)
-    #     for key, value in substitution_dict.items():
-    #         for index, element in enumerate(self.postfix_list):                
-    #             if element == key:
-    #                 self.postfix_list[index] = value
-
-    # def evaluate_list_of_values(self, substitution_list):
-    #     for index, substitution_dict in enumerate(self.evaluate_list):
-    #         postfix_list = self.postfix_list
-    #         for key, value in substitution_dict.items():
-    #             for index, element in enumerate(self.postfix_list):                
-    #                 if element == key:
-    #                     postfix_list[index] = value
-    #         substitution_dict["result"] = self.evaluate()
 
     # Evaluates the postfix list
     def evaluate(self, postfix_list):
@@ -275,6 +261,8 @@ class Expression:
             stemp.pop()
 
         self.infix_list = vtemp
+
+        return self.infix_list
 
     # Convert from infix to postfix form and store in posfix_list
     def assign_postfix_list(self):
