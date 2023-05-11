@@ -4,7 +4,7 @@ class ErrorType(Enum):
     Divide_By_Zero = 1
     Values_Not_Set = 2
 
-class MathException(Exception):
+class MathError(Exception):
     def __init__(self, error_type):
         self.error_message = ""
 

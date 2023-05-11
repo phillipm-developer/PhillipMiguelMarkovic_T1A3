@@ -4,7 +4,7 @@ class ErrorType(Enum):
     Invalid_Character = 1
     Missing_Parentheses = 2
 
-class SyntaxException(Exception):
+class SyntaxError(Exception):
     def __init__(self, infix_list, index, error_type):
         self.infix_list = infix_list
         self.error_message = ""

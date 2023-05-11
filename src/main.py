@@ -68,7 +68,7 @@ def interactive_mode():
             except ValueError as err:
                 print(err)
 
-        except expression.syntax_exception.SyntaxException as err:
+        except expression.SyntaxError as err:
             print(err.get_message())
 
 # Read and evaluate json file input. 
@@ -127,7 +127,7 @@ if input_file != None:  # None is a python keyword meaning null value
 
     except FileNotFoundError as err:
         print(err)
-    except expression.syntax_exception.SyntaxException as err:
+    except expression.SyntaxError as err:
         print(err.get_message())
 
 elif png_equation != None:

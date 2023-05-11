@@ -1,5 +1,7 @@
-import math_exception
-import syntax_exception
+from math_exception import MathError
+from math_exception import ErrorType
+from syntax_exception import SyntaxError
+from syntax_exception import ErrorType
 import math
 import numbers
 
@@ -27,14 +29,15 @@ class Expression:
 
         # Initisalisation
         self.values_set = False
-        self.remove_whitespace(self.expression)
-        self.assign_infix_list(self.expression)
-        self.assign_postfix_list()
+        self.expression = self.remove_whitespace(self.expression)
+        self.infix_list = self.create_infix_list(self.expression)
+        self.postfix_list = self.create_postfix_list(self.infix_list)
 
     # Allows same instance of Expression to be used with a new function
     def parse_expression(self, expression):
         if len(self.infix_list) > 0:
             self.infix_list = []
+
         if len(self.postfix_list) > 0:
             self.postfix_list = []
 
@@ -42,9 +45,9 @@ class Expression:
         
         # Re-initialise the expression
         self.values_set = False
-        self.remove_whitespace(self.expression)
-        self.assign_infix_list(self.expression)
-        self.assign_postfix_list()
+        self.expression = self.remove_whitespace(self.expression)
+        self.infix_list = self.create_infix_list(self.expression)
+        self.postfix_list = self.create_postfix_list()
 
     # End-user readable representation of the object
     def __str__(self):
@@ -69,7 +72,7 @@ class Expression:
         return variable_names
 
     # This method takes a list of values and calculates the results for each, returning the results
-    # in a list of equivalent size
+    # in a list of equivalent size (Note: This method assumes the expression only has one variable in it)
     def evaluate_list_of_values(self, value_list):
         result_list = []
 
@@ -113,14 +116,15 @@ class Expression:
         # Assign result back into calculation dictionary
         calculation_dict['result'] = result
         calculation_dict['solved'] = True
-        
+
         return calculation_dict
 
 
-    # Evaluates the postfix list
+    # Evaluates the postfix list (Note: This method assumes that all the 
+    # operands are numbers)
     def evaluate(self, postfix_list):
         operand_stack = []
-        result = 0
+        final_result = 0
 
         for index, element in enumerate(postfix_list):
             if not self.is_operator(element):
@@ -128,111 +132,99 @@ class Expression:
             else:
                 match element:
                     case "+":
-                        op2 = operand_stack[-1]
-                        operand_stack.pop()
-                        op1 = operand_stack[-1]
-                        operand_stack.pop()
-                        temp = op1 + op2
-                        operand_stack.append(temp)
+                        operand_2 = operand_stack.pop()
+                        operand_1 = operand_stack.pop()
+                        result = operand_1 + operand_2
+                        operand_stack.append(result)
 
                     case "-":
-                        op2 = operand_stack[-1]
-                        operand_stack.pop()
-                        op1 = operand_stack[-1]
-                        operand_stack.pop()
-                        temp = op1 - op2
-                        operand_stack.append(temp)
+                        operand_2 = operand_stack.pop()
+                        operand_1 = operand_stack.pop()
+                        result = operand_1 - operand_2
+                        operand_stack.append(result)
 
                     case "*":
-                        op2 = operand_stack[-1]
-                        operand_stack.pop()
-                        op1 = operand_stack[-1]
-                        operand_stack.pop()
-                        temp = op1 * op2
-                        operand_stack.append(temp)
+                        operand_2 = operand_stack.pop()
+                        operand_1 = operand_stack.pop()
+                        result = operand_1 * operand_2
+                        operand_stack.append(result)
 
                     case "/":
-                        op2 = operand_stack[-1]
-                        operand_stack.pop()
-                        op1 = operand_stack[-1]
-                        operand_stack.pop()
+                        operand_2 = operand_stack.pop()
+                        operand_1 = operand_stack.pop()
 
-                        if op2 == 0:
-                            raise math_exception.MathException(math_exception.ErrorType.Divide_By_Zero)
+                        if operand_2 == 0:
+                            raise MathError(ErrorType.Divide_By_Zero)
                         
-                        temp = op1 / op2
-                        operand_stack.append(temp)
+                        result = operand_1 / operand_2
+                        operand_stack.append(result)
 
                     case "^":
-                        op2 = operand_stack[-1]
-                        operand_stack.pop()
-                        op1 = operand_stack[-1]
-                        operand_stack.pop()
-                        temp = pow(op1, op2)
-                        operand_stack.append(temp)
+                        operand_2 = operand_stack.pop()
+                        operand_1 = operand_stack.pop()
+                        result = pow(operand_1, operand_2)
+                        operand_stack.append(result)
 
                     case "sin":
-                        op1 = operand_stack[-1]
-                        operand_stack.pop()
-                        temp = math.sin(op1)
-                        operand_stack.append(temp)
+                        operand = operand_stack.pop()
+                        result = math.sin(operand)
+                        operand_stack.append(result)
 
                     case "cos":
-                        op1 = operand_stack[-1]
-                        operand_stack.pop()
-                        temp = math.cos(op1)
-                        operand_stack.append(temp)
+                        operand = operand_stack.pop()
+                        result = math.cos(operand)
+                        operand_stack.append(result)
 
                     case "tan":
-                        op1 = operand_stack[-1]
-                        operand_stack.pop()
-                        temp = math.tan(op1)
-                        operand_stack.append(temp)
+                        operand = operand_stack.pop()
+                        result = math.tan(operand)
+                        operand_stack.append(result)
 
                     case "sqrt":
-                        op1 = operand_stack[-1]
-                        operand_stack.pop()
-                        temp = math.sqrt(op1)
-                        operand_stack.append(temp)
+                        operand = operand_stack.pop()
+                        result = math.sqrt(operand)
+                        operand_stack.append(result)
 
                     case "mu":
-                        op1 = operand_stack[-1]
-                        operand_stack.pop()
-                        temp = -1 * op1
-                        operand_stack.append(temp)
+                        operand = operand_stack.pop()
+                        result = -1 * operand
+                        operand_stack.append(result)
 
-        result = operand_stack[-1]
-        return result
+        final_result = operand_stack.pop()
+
+        return final_result
     
     # Converts the expression to infix form for later use
-    def assign_infix_list(self, infix_string):
+    def create_infix_list(self, infix_string):
+        infix_list = []  # Set up local infix list
         token = ''  # Appended to character by character to form a string
+
         for element in infix_string:
             if self.is_operator(element):
                 if len(token) > 0:
-                    self.infix_list.append(token)
+                    infix_list.append(token)
                     token = ''
 
-                self.infix_list.append(element)
+                infix_list.append(element)
             else:
                 token += element
 
         if len(token) > 0:
-            self.infix_list.append(token)
+            infix_list.append(token)
             token = ''
 
         # Check that the expression is properly formed
-        if not self.check_syntax(self.infix_list):
+        if not self.check_syntax(infix_list):
             return
 
 
         # Insert unary minus operators
-        for index, element in enumerate(self.infix_list):
+        for index, element in enumerate(infix_list):
             if element == "-":
                 if index == 0:
-                    self.infix_list[index] = "mu"
-                elif index > 0 and index < len(self.infix_list)-1 and self.is_operator(self.infix_list[index-1]) and self.infix_list[index-1] != ")":
-                    self.infix_list[index] = "mu"
+                    infix_list[index] = "mu"
+                elif index > 0 and index < len(infix_list)-1 and self.is_operator(infix_list[index-1]) and infix_list[index-1] != ")":
+                    infix_list[index] = "mu"
 
         # Insert parentheses to encompass the operand for a unary minus operator. A unary minus is treated as a 
         # function the way sin & cos are as they only apply to a single operator as well
@@ -240,8 +232,8 @@ class Expression:
         stemp = []  # We treat this variable as a stack
         vtemp = []  # We construct the new list consisting of expression tokens with the parentheses inserted for unary minus (mu)
 
-        for index, element in enumerate(self.infix_list):
-            if self.infix_list[index] == "mu" and self.infix_list[index+1] != "(":
+        for index, element in enumerate(infix_list):
+            if infix_list[index] == "mu" and infix_list[index+1] != "(":
                 vtemp.append(element)
                 vtemp.append("(")
                 stemp.append("mu")
@@ -268,17 +260,18 @@ class Expression:
                 vtemp.append(")")
             stemp.pop()
 
-        self.infix_list = vtemp
+        infix_list = vtemp
 
-        return self.infix_list
+        return infix_list
 
-    # Convert from infix to postfix form and store in posfix_list
-    def assign_postfix_list(self):
-        operator_stack = []
-
-        for index, element in enumerate(self.infix_list):
+    # Create a postfix list from an infix list
+    def create_postfix_list(self, infix_list):
+        postfix_list = []  # Set up local postfix list
+        operator_stack = []  # Set up operator stack (Actually a list treated as a stack)
+        
+        for index, element in enumerate(infix_list):
             if not self.is_operator(element):
-                self.postfix_list.append(element)
+                postfix_list.append(element)
             else:
                 if len(operator_stack) == 0:
                     operator_stack.append(element)
@@ -288,7 +281,7 @@ class Expression:
                     operator_stack.append(element)
                 elif element == ")":
                     while operator_stack[-1] != "(":    # Pop all the stack operators until "("
-                        self.postfix_list.append(operator_stack[-1])
+                        postfix_list.append(operator_stack[-1])
                         operator_stack.pop()
                     operator_stack.pop()  # Pop the '(' operator
                 else:
@@ -299,9 +292,11 @@ class Expression:
                     operator_stack.append(element)
 
         while len(operator_stack) > 0:
-            self.postfix_list.append(operator_stack[-1])
+            postfix_list.append(operator_stack[-1])
             operator_stack.pop()
 
+        return postfix_list
+    
     # Returns a number (0-4) indictating precedence level for the operator
     def precedence_level(self, operator):
         if operator == "(" or operator == ")":
@@ -356,8 +351,7 @@ class Expression:
 
     # Remove any whitespace from the expression string up front.
     def remove_whitespace(self, expression):
-        self.expression = expression.replace(" ", "")
-        return self.expression
+        return expression.replace(" ", "")
 
     # Chceks if the string expression is properly formatted, otherwise raise an exception
     def check_syntax(self, infix_list):
@@ -366,37 +360,37 @@ class Expression:
         for index, element in enumerate(infix_list):
             if index == 0:
                 if element == ")" or element == "*" or element == "/" or element == "+" or element == "^":
-                    raise syntax_exception.SyntaxException(infix_list, index, syntax_exception.ErrorType.Invalid_Character)
+                    raise SyntaxError(infix_list, index, ErrorType.Invalid_Character)
                 elif element == "(":
                     brackets.append(index)
             elif index > 0:
                 if element == "(":
                     if self.is_number_or_variable(infix_list[index-1]) or infix_list[index-1] == ")":
-                        raise syntax_exception.SyntaxException(infix_list, index, syntax_exception.ErrorType.Invalid_Character)
+                        raise SyntaxError(infix_list, index, ErrorType.Invalid_Character)
                     brackets.append(index)
                 elif element == "-":
                     if self.is_unary_operator(infix_list[index-1]):
-                        raise syntax_exception.SyntaxException(infix_list, index, syntax_exception.ErrorType.Invalid_Character)
+                        raise SyntaxError(infix_list, index, ErrorType.Invalid_Character)
                 elif self.is_binary_operator(element):
                     if infix_list[index-1] == "-" or self.is_unary_operator(infix_list[index-1]) or infix_list[index-1] == "(" or self.is_binary_operator(infix_list[index-1]):
-                        raise syntax_exception.SyntaxException(infix_list, index, syntax_exception.ErrorType.Invalid_Character)
+                        raise SyntaxError(infix_list, index, ErrorType.Invalid_Character)
                 elif self.is_unary_operator(element):
                     if infix_list[index-1] == ")" or self.is_unary_operator(infix_list[index-1]) or self.is_number_or_variable(infix_list[index-1]):
-                        raise syntax_exception.SyntaxException(infix_list, index, syntax_exception.ErrorType.Invalid_Character)
+                        raise SyntaxError(infix_list, index, ErrorType.Invalid_Character)
                 elif self.is_number_or_variable(element):
                     if infix_list[index-1] == ")" or self.is_unary_operator(infix_list[index-1]) or self.is_number_or_variable(infix_list[index-1]):
-                        raise syntax_exception.SyntaxException(infix_list, index, syntax_exception.ErrorType.Invalid_Character)
+                        raise SyntaxError(infix_list, index, ErrorType.Invalid_Character)
                 elif element == ")":
                     if infix_list[index-1] == "(" or self.is_binary_operator(infix_list[index-1]) or self.is_unary_operator(infix_list[index-1]) or len(brackets) <= 0:
-                        raise syntax_exception.SyntaxException(infix_list, index, syntax_exception.ErrorType.Invalid_Character)
+                        raise SyntaxError(infix_list, index, ErrorType.Invalid_Character)
                     brackets.pop()
 
         last = len(infix_list) - 1  # Assigning the last index
 
         if self.is_unary_operator(infix_list[last]) or self.is_binary_operator(infix_list[last]) or infix_list[last] == "(":
-            raise syntax_exception.SyntaxException(infix_list, index, syntax_exception.ErrorType.Invalid_Character)
+            raise SyntaxError(infix_list, index, ErrorType.Invalid_Character)
         elif len(brackets) > 0:
-            raise syntax_exception.SyntaxException(infix_list, index, syntax_exception.ErrorType.Missing_Parentheses)
+            raise SyntaxError(infix_list, index, ErrorType.Missing_Parentheses)
         else:
             return True
     
