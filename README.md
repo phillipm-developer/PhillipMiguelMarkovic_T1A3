@@ -111,13 +111,24 @@ If no command line parameters are supplied to the app when it is invoked, it wil
 
 The app will extract the variables from the expression, then prompt the user for a value to substitute into each variable. This information is inserted into a new calculation dictionary object which is then passed to the expression evalator part of the app for processing. It writes the result back into the dictionary. The app then retrieves this result and displays it in the console. The user is then prompted for the next expression. Here is a sample run in interactive mode:
 
-![Alt text](docs/screen_cap6.png)
+    phillip@MSI:~/projects/PhillipMiguelMarkovic_T1A3/src$ ./evaluate.sh
+    Please enter an expression> x^3+3*x^2-y^2+sin(y)+z
+    Please enter the value for x> 12
+    Please enter the value for y> 9
+    Please enter the value for z> 5
+    2084.4121184852415
+    Please enter an expression> quit
+    phillip@MSI:~/projects/PhillipMiguelMarkovic_T1A3/src$
 
 This loop will continue until the user types 'quit' or 'exit' at the prompt, at which point the program will terminate.
 
 If the user submits an improperly formatted expression such as an extra operator in the wrong place or a missing parentheses a syntax error (exception) is generated and an appropriate error message is displayed as in the following run:
 
-![Alt text](docs/screen_cap4.png)
+    phillip@MSI:~/projects/PhillipMiguelMarkovic_T1A3/src$ ./evaluate.sh
+    Please enter an expression> x^2+3**x-15
+    Error at column 7 in x^2+3**x-15
+                               ^
+    Please enter an expression>
 
 ## Support for Unlimited Variables
 
