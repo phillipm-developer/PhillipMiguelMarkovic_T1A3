@@ -99,13 +99,21 @@ class Expression:
     def evaluate_calc_dict(self, calculation_dict):
         postfix_list = self.postfix_list
         substitutions = calculation_dict['substitutions']
+
+        # Substitute all variables in the equation with their assigned values
         for key, value in substitutions.items():
             for index, element in enumerate(self.postfix_list):
                 if element == key:
                     self.postfix_list[index] = value
+
+        # Local postfix list has nothing but numbers and operands in it, so
+        # it can now be evaluated    
         result = self.evaluate(postfix_list)
+
+        # Assign result back into calculation dictionary
         calculation_dict['result'] = result
         calculation_dict['solved'] = True
+        
         return calculation_dict
 
 
