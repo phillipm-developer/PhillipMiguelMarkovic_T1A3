@@ -1,8 +1,6 @@
 #!/bin/bash
 
-# echo "$(command -v python3)"
-# echo "$(command -v bash)"
-
+# Checks if python3 is installed
 if ! [[ -x "$(command -v python3)" ]]
 then
     echo 'Error: 
@@ -11,39 +9,27 @@ then
     exit 1
 fi
 
-# if python -c "import pytest" &> /dev/null; then
-#     echo ''
-# else
-#     echo 'PyTest module is not installed'
-#     echo "You can install PyTest on the command line using 'pip install pytest'"
-#     exit 1 
-# fi
-
-# if python -c "import matplotlib" &> /dev/null; then
-#     echo ''
-# else
-#     echo 'MatPlotlib module is not installed'
-#     echo "You can install MatPlotlib on the command line using 'pip install matplotlib'"
-#     exit 1
-# fi
-
 python3 -m venv .venv
 source .venv/bin/activate
 
-if python -c "import pytest" &> /dev/null; then
-    echo ''
-else
-    echo 'PyTest module is not installed'
-    echo "You can install PyTest on the command line using 'pip install pytest'"
-    exit 1 
+python3 -c "import pytest" &> /dev/null
+
+# Checks the exit status of the last command
+if [ $? -eq 1 ]
+    then
+        echo 'Error: PyTest module is not installed'
+        echo "You can install PyTest on the command line using 'pip install pytest'"
+        exit 1
 fi
 
-if python -c "import matplotlib" &> /dev/null; then
-    echo ''
-else
-    echo 'MatPlotlib module is not installed'
-    echo "You can install MatPlotlib on the command line using 'pip install matplotlib'"
-    exit 1
+python3 -c "import matplotlib" &> /dev/null
+
+# Checks the exits status of the last command
+if [ $? -eq 1 ]
+    then
+        echo 'Error: MatPlotlib module is not installed'
+        echo "You can install MatPlotlib on the command line using 'pip install matplotlib'"
+        exit 1
 fi
 
 python3 main.py $1 $2 $3 $4 $5 $6
