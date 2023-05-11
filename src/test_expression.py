@@ -1,7 +1,7 @@
-from expression import Expression
-from syntax_exception import SyntaxException
-from syntax_exception import ErrorType
 import pytest
+from expression import Expression
+from syntax_exception import SyntaxError
+from syntax_exception import ErrorType
 
 def test_parse_expression():
     exp = Expression('2*x+3')
@@ -102,11 +102,11 @@ def test_evaluate():
 
     assert result == 36
 
-def test_assign_infix_list():
+def test_create_infix_list():
     equation = '(x+1)/(x-1)'
     exp = Expression(equation)
     exp.infix_list = []
-    infix_list = exp.assign_infix_list(equation)
+    infix_list = exp.create_infix_list(equation)
 
     assert len(infix_list) == 11
     assert infix_list[0] == '('
@@ -139,29 +139,30 @@ def test_check_syntax():
 
     try:
         exp.check_syntax(exp.infix_list)
-    except SyntaxException as err:
+    except SyntaxError as err:
         actual_error_msg = err.get_message()
 
     assert actual_error_msg == expected_error_msg
 
-def test_assign_postfix_list():
+def test_create_postfix_list():
     equation = '(x+1)/(x-1)'
     exp = Expression(equation)
+    postfix_list = []
 
-    exp.postfix_list = []
+    assert len(postfix_list) == 0
 
-    assert len(exp.postfix_list) == 0
+    infix_list = exp.get_infix_list()
 
-    exp.assign_postfix_list()
+    postfix_list = exp.create_postfix_list(infix_list)
 
-    assert len(exp.postfix_list) == 7
-    assert exp.postfix_list[0] == 'x'
-    assert exp.postfix_list[1] == '1'
-    assert exp.postfix_list[2] == '+'
-    assert exp.postfix_list[3] == 'x'
-    assert exp.postfix_list[4] == '1'
-    assert exp.postfix_list[5] == '-'
-    assert exp.postfix_list[6] == '/'
+    assert len(postfix_list) == 7
+    assert postfix_list[0] == 'x'
+    assert postfix_list[1] == '1'
+    assert postfix_list[2] == '+'
+    assert postfix_list[3] == 'x'
+    assert postfix_list[4] == '1'
+    assert postfix_list[5] == '-'
+    assert postfix_list[6] == '/'
 
 def test_precedence_level():
     exp = Expression("x+1")

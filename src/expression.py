@@ -47,7 +47,7 @@ class Expression:
         self.values_set = False
         self.expression = self.remove_whitespace(self.expression)
         self.infix_list = self.create_infix_list(self.expression)
-        self.postfix_list = self.create_postfix_list()
+        self.postfix_list = self.create_postfix_list(self.infix_list)
 
     # End-user readable representation of the object
     def __str__(self):
@@ -105,9 +105,9 @@ class Expression:
 
         # Substitute all variables in the equation with their assigned values
         for key, value in substitutions.items():
-            for index, element in enumerate(self.postfix_list):
+            for index, element in enumerate(postfix_list):
                 if element == key:
-                    self.postfix_list[index] = value
+                    postfix_list[index] = value
 
         # Local postfix list has nothing but numbers and operands in it, so
         # it can now be evaluated    
@@ -286,7 +286,7 @@ class Expression:
                     operator_stack.pop()  # Pop the '(' operator
                 else:
                     while len(operator_stack) > 0 and operator_stack[-1] != "(" and self.precedence_level(operator_stack[-1]) >= self.precedence_level(element):
-                        self.postfix_list.append(operator_stack[-1])
+                        postfix_list.append(operator_stack[-1])
                         operator_stack.pop()
 
                     operator_stack.append(element)
