@@ -6,6 +6,8 @@ https://www.tutorialspoint.com/coding-standards-style-guide-for-python-programs
 
 https://peps.python.org/pep-0008/
 
+https://www.coderacademy.edu.au/faq - Hardware and OS Requirements
+
 # Link to Source Control Repository
 
 https://github.com/phillipm-developer/PhillipMiguelMarkovic_T1A3
@@ -151,9 +153,107 @@ Each image is generated with its own unique file name. This was achieved by usin
 
 ## Installation
 
+The following files are required to run the evaluate terminal application:
+
+evaluate.sh<br>
+main.py<br>
+expression.py<br>
+syntax_exception.py<br>
+math_exception.py<br>
+plot_equation.py<br>
+input.json
+
+These files are available in PhillipMiguelMarkovic_T1A3.zip. Create or choose a designated folder for the app, then extract these files from the archive.
+
 ## Dependencies
+
+These files require Python 3.10 or higher, and the python modules pytest and matplotlib. Run the evaluate app from your Linux or WSL (Windows Subsystem for Linux) terminal in the following manner. Move into your nominated directory and run the following:
+
+./evaluate.sh
+
+As part of the initial setup it checks for these dependencies and will display an error to the console advising the user which dependencies are not available. If all 3 are installed the evaluate app will start up in interactive mode.
 
 ## System Requirements
 
+Windows 10 or 11 running Windows Subsystem for Linux (WSL).
+
+Alternatively you can use Linux (preferably Ubuntu).
+
+Desktop PC or laptop. I recommend that the hardware be no older than 2019 as this is the specification recommended by Coder Academy to their cohorts for their courses (Refer to 'References' above). This app was developed and tested on an MSI 13th Gen Intel(R) Core(TM) i7-13620H 2.40 GHz laptop so the hardware requirement is reasonable.
+
+So to summarize more generally the minimum requirements are:
+
+Minimum Windows specifications
+16GB RAM
+No more than 4 years old
+Supports Windows 10 or 11  
+
+Minimum Mac specifications:
+
+16GB RAM
+No more than 4 years old
+OS Big Sur (minimum)
+
+The Mac specification is specified as everyone has different preferences as users may want to run the terminal app on their Mac. The functionality of the app is not guaranteed and the evaluate shell script is unlikely to run on a Mac.
+
 ## Usage
 
+The following instructions demonstrate how to use the terminal application with the available comand line options:
+
+./evaluate.sh
+
+If the application is invoked without any arguments supplied on the command line, the terminal app will enter interactive mode. The user is provided with a simple shell and is prompted to supply expressions with variables. The ap will then prompt the user for values for each of the variables in the expression. Once the last value is supplied, the expression is evaluated and the result is displayed as shell output. The user is then prompted for the next expression.
+
+    phillip@MSI:~/projects/PhillipMiguelMarkovic_T1A3/src$ ./evaluate.sh 
+    Please enter an expression> x^2
+    Please enter the value for x> 3
+    9.0
+    Please enter an expression> -x^2
+    Please enter the value for x> 3
+    9.0
+    Please enter an expression> -x^3
+    Please enter the value for x> 3
+    -27.0
+    Please enter an expression> -sin(x)
+    Please enter the value for x> 3
+    -0.1411200080598672
+    Please enter an expression> quit
+    phillip@MSI:~/projects/PhillipMiguelMarkovic_T1A3/src$
+
+The user can type 'quit' or 'exit' at any time to exit the program.
+
+./evaluate.sh -i input.json
+
+The user can invoke the program by specifying the -i command line option and providing the json file as the input paarameter. The app will then open the file and read the input data on each line. The expression, input values and results are then displayed in the console.
+
+    phillip@MSI:~/projects/PhillipMiguelMarkovic_T1A3/src$ ./evaluate.sh -i input.json 
+    EXPR: x^2+2*x+1, VARS: x=5, RESULT: 36.0
+    EXPR: -sin(x)-cos(x)+sin(3*x), VARS: x=10, RESULT: 0.3950610158729603
+    EXPR: 2*x^3+5*x^2-3*x+10, VARS: x=12, RESULT: 4150.0
+    EXPR: 2*x^3+5*x^2-3*x+10, VARS: x=15, RESULT: 7840.0
+    EXPR: 2*x^3+5*x^2-3*x+10, VARS: x=20.5, RESULT: 19280.0
+    EXPR: sin(x^2)+sin(x)-cos(x), VARS: x=7, RESULT: -1.0506683083839874
+    EXPR: sin(x^2)+sin(x*y)-cos(y^2), VARS: x=7, y=3.5, RESULT: -2.49548102969227
+    phillip@MSI:~/projects/PhillipMiguelMarkovic_T1A3/src$
+
+./evaluate.sh -i output.json -o output.json
+
+By providing and additional parameter -o followed by the output file name, the results of the bulk evaluations will be written to the output file in the current working directory. The results will not be displayed to the console.
+
+./evaluate.sh -o output.json
+
+Supplying and output file without a corresponding input  file is not permitted and an error message will be displayed.
+
+    phillip@MSI:~/projects/PhillipMiguelMarkovic_T1A3/src$ ./evaluate.sh -o output.json 
+    You must provide a corresponding input file '-i' in order to write to output.json
+    phillip@MSI:~/projects/PhillipMiguelMarkovic_T1A3/src$
+
+./evaluate.sh -png "3*x^3-x+10"
+
+The -png option allows the user to specify an equation for the purpose of plotting it on an x-y axis and saving it as an image file to the current working directory. Please ensure you enclose the equation in quotes when declaring it on the command line.
+
+    phillip@MSI:~/projects/PhillipMiguelMarkovic_T1A3/src$ ./evaluate.sh -png "x^2"
+    The figure has been saved to Figure_2023-5-11_22-53-20:30463.png
+    phillip@MSI:~/projects/PhillipMiguelMarkovic_T1A3/src$
+
+There is no need to specify an output filename. It ia automaticallly generated by the application.

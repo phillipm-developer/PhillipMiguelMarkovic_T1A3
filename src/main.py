@@ -132,6 +132,7 @@ if input_file != None:  # None is a python keyword meaning null value
 
 elif png_equation != None:
     plot_equation.plot_and_save(png_equation, -100, 100)
-    print("made it to here")
+elif output_file != None:
+    print(f"You must provide a corresponding input file '-i' in order to write to {output_file}")
 else:
     interactive_mode()
