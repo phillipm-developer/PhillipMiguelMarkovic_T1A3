@@ -178,7 +178,7 @@ All tasks here have an equal high priority as all of the user facing features re
 
 1) Develop create_infix_list method, associated utility methods, error handling and unit tests
 
-    This task has 3 essential sub-tasks:
+    This task has 3 essential stages or sub-tasks:
     - Tokenize the user defined expression string
     - Check the correctness of the tokens in the list (check_syntax method)
     - Insert unary minus where required in this list of tokens<br><br>
@@ -219,7 +219,7 @@ The following tasks should be executed in the order specified as each task depen
 
 3) Create a function to open and read the file
 
-4) Create the functionality to process input file content into the required format for the Expression class to then evalaute.
+4) Create the functionality to process input file content into the required format for the Expression class to then evaluate.
 
 5) Create the functionality to display the results to the console
 
@@ -300,6 +300,20 @@ Once implemented, this feature allows users to visualize their expressions.
 
 Duration: 6 Hours
 Priority: Low
+
+There is approximately 7 days of work in total to carry out the implementation plan.
+
+# Trello Task Board
+
+Trello is the project management platform selected to track this implementation plan. The following screen shots show how the implementation plan has been recorded in Trello, and how it has been updated as development has progressed.
+
+![Trello Screenshot 1](docs/Trello_Board_1.png)
+
+![Trello Screenshot 2](docs/Trello_Board_2.png)
+
+![Trello Screenshot 4](docs/Trello_Board_4.png)
+
+![Trello Screenshot 9](docs/Trello_Board_9.png)
 
 # User Guide
 
