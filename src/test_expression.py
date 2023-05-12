@@ -22,7 +22,7 @@ def test_is_float():
     assert exp.is_float('12')
     assert exp.is_float('12.05') == True
     assert exp.is_float('12.0') == True
-    assert exp.is_float('12.05') == True
+    assert exp.is_float('-12.05') == True
     assert exp.is_float('-12') == True
     assert exp.is_float('-12.0') == True
     assert exp.is_float('-12.55') == True

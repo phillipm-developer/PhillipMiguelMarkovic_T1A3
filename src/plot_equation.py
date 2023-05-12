@@ -1,11 +1,11 @@
 import matplotlib.pyplot as plt
-import expression
+from expression import Expression
 import datetime
 
 # Plots function and saves as an image file
 def plot_and_save(ex, bottom=-50, top=50):  # Defaults range from -50 to 50 (100 values)
     # Create Expression instance
-    equation = expression.Expression(ex)
+    equation = Expression(ex)
 
     # Generate a list of input values as a list
     x_axis_list = list(range(bottom, top))

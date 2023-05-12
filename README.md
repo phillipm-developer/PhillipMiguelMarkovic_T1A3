@@ -160,6 +160,147 @@ Each image is generated with its own unique file name. This was achieved by usin
 
 # Implementation Plan
 
+The following is an implementation plan for the development of the evaluate terminal appliation. This plan is divided up into the portion of the application that drives it behind the scenes (core), and the features the application offers its users.
+
+The Expression class is the largest and most complex part of the application. It is the component that embodies the expression and evaluates the expression based on user and file input. The features which are visible to the user are built on top of the expession class, and many more features could like wise be added.
+
+Implementation of the Expression class is divided up into tasks and sub tasks. The Expression class can be treated like an independant feature in the context of this project plan.
+
+## Feature: Expression class
+
+<b>Task Checklist - 5 major methods</b>
+
+Development of the Expression class tasks can be split up on a per method basis. Each method can be implemented independently and run with unit tests until its time to merge the code into the repository. However the team is only comprised of one developer. The output of each method servess as the input to the next method in the tasklist below. You cannot implement create_postfix_list without implementing create_infix_list to provide the input parameters.
+
+The only exception to this is the check syntax method which is called by create_infix_list to check the correctness of the expression string supplied by the user. There is some crossover here and the developer would be better suited to developing the check_syntax method after the create infix list and inserting a call to this method into create_infix_list at the appropriate point.
+
+All tasks here have an equal high priority as all of the user facing features rely on these tasks being implemented first.
+
+1) Develop create_infix_list method, associated utility methods, error handling and unit tests
+
+    This task has 3 essential sub-tasks:
+    - Tokenize the user defined expression string
+    - Check the correctness of the tokens in the list (check_syntax method)
+    - Insert unary minus where required in this list of tokens<br><br>
+
+    Duration: 1 day<br>
+    Priority: High
+
+2) Develop check_syntax method, associated utility methods, error handling and unit tests
+
+    Duration: 1 day<br>
+    Priority: High
+
+3) Develop create_postfix_list, associated utility methods, error handling and unit tests
+
+    Duration: 1 day<br>
+    Priority: High
+
+4) Develop evaluate method, associated utility methods, error handling and unit tests
+
+    Duration: 6 hours<br>
+    Priority: High
+
+5) Develop evaluate calculation dictionary (evaluate_calc_dict) method, associated utility methods, error handling and unit tests
+
+    Duration: 1 day<br>
+    Priority: High
+
+
+## Feature: File Input/Output
+
+This feature is incorporated into the application to allow users to draw input data from a file of their choosing. Once all the expressions in the input file have been evaluated, the results are either displayed to screen written to a file at the users discretion.
+
+The following tasks should be executed in the order specified as each task depends on the previous one. This feature is given high priority because it is the minimum requirement for this appliacation to be viable (MVP).
+
+1) Create a series of input files for testing and general use (in the JSON format)
+
+2) Create the functionality to process an input file specified as a command line option
+
+3) Create a function to open and read the file
+
+4) Create the functionality to process input file content into the required format for the Expression class to then evalaute.
+
+5) Create the functionality to display the results to the console
+
+6) Create the functionality to process an output file specified as a command line option
+
+7) Create a function to write the results to an output file in JSON format
+
+8) Ensure error handling is implemented for each of the 7 previous tasks e.g. ouptut files cannot be specified without a corresponding input file
+
+9) Implement tests for this feature.
+
+Duration: 1 day<br>
+Priority: High
+
+## Feature: Interactive Mode
+
+This feature is enabled when the user does not submit any command line arguments (default behaviour). A simple shell is invoked prompting the user for input (expressions and values) and displaying the results to the console.
+
+This feature should only be implemented once file processing has been developed, hence its medium priority.
+
+1) Create a function called interactive_mode
+
+2) Create the functionality to prompt the user for an expression
+
+3) Display an error message if the expression submitted is not a valid expression
+
+4) Prompt the user for values for all variables in the expression
+
+5) Display an error message if the value submitted is not valid
+
+6) Create a data structue to contain this initial data to submit to the Expression object. The result is written to the structure and passed back.
+
+7) Display the result to screen then reprompt user for an expression
+
+8) Implement the ability to exit interactive mode at any time
+
+9) Implement tests for this feature
+
+Duration: 1 Day<br>
+Priority: Medium
+
+## Feature: Unlimited Variable Support
+
+The application does not need to support this feature to be viable. It could have been restricted to using single variable expressions. This would not need any of the tasks here to be carried out, hence the low priority. 
+
+1) Create a method in Expression that extracts the variables from the expressions and returns a dictionary of unset variables
+
+2) Implement the functionality required to obtain values from a file for those variables
+
+3) Implement the functionality required to obtained values from a user to set those variables
+
+4) Create the functionality to set the values of those variables in the same dictionary
+
+5) Implement error handling to ensure the values provided are valid
+
+6) Implement tests for this feature 
+
+Duration: 6 Hours<br>
+Priority: Low
+
+## Feature: Image File Generation
+
+Once implemented, this feature allows users to visualize their expressions.
+
+1) Implement the functionality to process the equation to be plotted and saved as a command line argument. The equation is submitted on the command line.
+
+2) Write a function to plot and save the function as an image file in PNG format
+
+3) Restrict expressions to single variables, otherwise it can't be plotted on a 2D cartesian plane.
+
+4) Write a method in the Expression class to do a bulk evaluate on a list of values and return a list of results.
+
+5) Implement a scheme for creating unique filenames using the python built-in module datetime.
+
+6) Implement error handling and display appropriate error messages. 
+
+7) Implement tests for this feature
+
+Duration: 6 Hours
+Priority: Low
+
 # User Guide
 
 ## Installation
