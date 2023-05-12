@@ -2,15 +2,19 @@
 
 # References
 
-https://www.tutorialspoint.com/coding-standards-style-guide-for-python-programs
+Diwan A. 2022, <i>Tutorialspoint</i>, 'Coding standards (style guide) for Python programs?', accessed 10 May 2023, <https://www.tutorialspoint.com/coding-standards-style-guide-for-python-programs>
 
-https://peps.python.org/pep-0008/
+Rossum G, Warsaw B, Coghlan N. 2001, <i>Python Enhancement Proposals</i>, 'PEP 8 – Style Guide for Python Code', accessed 10 May 2023, https://peps.python.org/pep-0008/
 
-https://www.coderacademy.edu.au/faq - Hardware and OS Requirements
+<i>Coder Academy</i>, 'Frequently Asked Questions', accessed 10 May 2023, https://www.coderacademy.edu.au/faq
 
 # Link to Source Control Repository
 
 https://github.com/phillipm-developer/PhillipMiguelMarkovic_T1A3
+
+# Link to Trello Workspace
+
+https://trello.com/b/E3EoGLMn/evaluator-terminal-app
 
 # Code Style Guide
 
@@ -303,7 +307,7 @@ Priority: Low
 
 There is approximately 7 days of work in total to carry out the implementation plan.
 
-# Trello Task Board
+## Trello Task Board
 
 Trello is the project management platform selected to track this implementation plan. The following screen shots show how the implementation plan has been recorded in Trello, and how it has been updated as development has progressed.
 
@@ -345,7 +349,7 @@ Windows 10 or 11 running Windows Subsystem for Linux (WSL).
 
 Alternatively you can use Linux (preferably Ubuntu).
 
-Desktop PC or laptop. I recommend that the hardware be no older than 2019 as this is the specification recommended by Coder Academy to their cohorts for their courses (Refer to 'References' above). This app was developed and tested on an MSI 13th Gen Intel(R) Core(TM) i7-13620H 2.40 GHz laptop so the hardware requirement is reasonable.
+Desktop PC or laptop. I recommend that the hardware be no older than 2019 as this is the specification recommended by Coder Academy to their cohorts for their courses (Coder Academy FAQ n.d.). This app was developed and tested on an MSI 13th Gen Intel(R) Core(TM) i7-13620H 2.40 GHz laptop so the hardware requirement is reasonable.
 
 So to summarize more generally the minimum requirements are:
 
