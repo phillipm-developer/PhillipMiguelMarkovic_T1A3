@@ -1,9 +1,9 @@
-from math_exception import MathError
-from math_exception import ErrorType
-from syntax_exception import SyntaxError
-from syntax_exception import ErrorType
 import math
 import numbers
+from math_exception import MathError
+from math_exception import MathErrorType
+from syntax_exception import SyntaxError
+from syntax_exception import SyntaxErrorType
 
 class Expression:
     def __init__(self, expression):
@@ -80,7 +80,8 @@ class Expression:
         substitutions = self.extract_variable_names()
 
         if len(substitutions) > 1:
-            print("Please submit an expression with only one variable in it")
+            raise MathError(MathErrorType.More_Than_One_Variable)
+        
         elif len(substitutions) == 1:
             var_name = list(substitutions.keys())[0]
 
@@ -154,7 +155,7 @@ class Expression:
                         operand_1 = operand_stack.pop()
 
                         if operand_2 == 0:
-                            raise MathError(ErrorType.Divide_By_Zero)
+                            raise MathError(MathErrorType.Divide_By_Zero)
                         
                         result = operand_1 / operand_2
                         operand_stack.append(result)
@@ -214,8 +215,7 @@ class Expression:
             token = ''
 
         # Check that the expression is properly formed
-        if not self.check_syntax(infix_list):
-            return
+        self.check_syntax(infix_list)
 
 
         # Insert unary minus operators
@@ -359,42 +359,40 @@ class Expression:
 
         # If the infix list is empty, then nothing to check
         if len(infix_list) == 0:
-            raise SyntaxError(infix_list, 0, ErrorType.Zero_Length_Expression)
+            raise SyntaxError(infix_list, 0, SyntaxErrorType.Zero_Length_Expression)
         
         for index, element in enumerate(infix_list):
             if index == 0:
                 if element == ")" or element == "*" or element == "/" or element == "+" or element == "^":
-                    raise SyntaxError(infix_list, index, ErrorType.Invalid_Character)
+                    raise SyntaxError(infix_list, index, SyntaxErrorType.Invalid_Character)
                 elif element == "(":
                     brackets.append(index)
             elif index > 0:
                 if element == "(":
                     if self.is_number_or_variable(infix_list[index-1]) or infix_list[index-1] == ")":
-                        raise SyntaxError(infix_list, index, ErrorType.Invalid_Character)
+                        raise SyntaxError(infix_list, index, SyntaxErrorType.Invalid_Character)
                     brackets.append(index)
                 elif element == "-":
                     if self.is_unary_operator(infix_list[index-1]):
-                        raise SyntaxError(infix_list, index, ErrorType.Invalid_Character)
+                        raise SyntaxError(infix_list, index, SyntaxErrorType.Invalid_Character)
                 elif self.is_binary_operator(element):
                     if infix_list[index-1] == "-" or self.is_unary_operator(infix_list[index-1]) or infix_list[index-1] == "(" or self.is_binary_operator(infix_list[index-1]):
-                        raise SyntaxError(infix_list, index, ErrorType.Invalid_Character)
+                        raise SyntaxError(infix_list, index, SyntaxErrorType.Invalid_Character)
                 elif self.is_unary_operator(element):
                     if infix_list[index-1] == ")" or self.is_unary_operator(infix_list[index-1]) or self.is_number_or_variable(infix_list[index-1]):
-                        raise SyntaxError(infix_list, index, ErrorType.Invalid_Character)
+                        raise SyntaxError(infix_list, index, SyntaxErrorType.Invalid_Character)
                 elif self.is_number_or_variable(element):
                     if infix_list[index-1] == ")" or self.is_unary_operator(infix_list[index-1]) or self.is_number_or_variable(infix_list[index-1]):
-                        raise SyntaxError(infix_list, index, ErrorType.Invalid_Character)
+                        raise SyntaxError(infix_list, index, SyntaxErrorType.Invalid_Character)
                 elif element == ")":
                     if infix_list[index-1] == "(" or self.is_binary_operator(infix_list[index-1]) or self.is_unary_operator(infix_list[index-1]) or len(brackets) <= 0:
-                        raise SyntaxError(infix_list, index, ErrorType.Invalid_Character)
+                        raise SyntaxError(infix_list, index, SyntaxErrorType.Invalid_Character)
                     brackets.pop()
 
         last = len(infix_list) - 1  # Assigning the last index
 
         if self.is_unary_operator(infix_list[last]) or self.is_binary_operator(infix_list[last]) or infix_list[last] == "(":
-            raise SyntaxError(infix_list, index, ErrorType.Invalid_Character)
+            raise SyntaxError(infix_list, index, SyntaxErrorType.Invalid_Character)
         elif len(brackets) > 0:
-            raise SyntaxError(infix_list, index, ErrorType.Missing_Parentheses)
-        else:
-            return True
-    
+            raise SyntaxError(infix_list, index, SyntaxErrorType.Missing_Parentheses)
+

@@ -1,5 +1,6 @@
 import matplotlib.pyplot as plt
 from expression import Expression
+from syntax_exception import SyntaxError
 import datetime
 
 # Plots function and saves as an image file
@@ -25,3 +26,4 @@ def plot_and_save(ex, bottom=-50, top=50):  # Defaults range from -50 to 50 (100
     plt.savefig(file_name)
     print(f"The figure has been saved to {file_name}")
 
+    return file_name

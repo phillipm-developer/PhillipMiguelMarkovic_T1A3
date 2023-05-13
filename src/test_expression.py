@@ -1,7 +1,7 @@
 import pytest
 from expression import Expression
 from syntax_exception import SyntaxError
-from syntax_exception import ErrorType
+from syntax_exception import SyntaxErrorType
 
 def test_parse_expression():
     exp = Expression('2*x+3')
