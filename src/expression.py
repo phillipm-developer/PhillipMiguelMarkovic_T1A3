@@ -271,7 +271,7 @@ class Expression:
         
         for index, element in enumerate(infix_list):
             if not self.is_operator(element):
-                postfix_list.append(element)
+                postfix_list.append(element)  # If the element is not an operator then add it to the postfix list
             else:
                 if len(operator_stack) == 0:
                     operator_stack.append(element)

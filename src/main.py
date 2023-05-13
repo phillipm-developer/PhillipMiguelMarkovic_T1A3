@@ -1,21 +1,8 @@
 import expression
-import argparse
 import csv
 import json
 import plot_equation
-
-parser = argparse.ArgumentParser()
-
-# parser.add_argument("-e", "--equation", help="Expression to evaluate")
-# parser.add_argument("-v", "--value", help="Numerical value to subtitute into equation")
-# parser.add_argument("-vs", "--values", help="Solve for these values")
-
-parser.add_argument("-png", "--png_image", help="Expression to plot and save as image file")
-parser.add_argument("-i", "--input_file", type=str, help="CSV or JSON input file containing equation & values")
-parser.add_argument("-o", "--output_file", type=str, help="CSV or JSON output file for evaluated answers")
-
-
-args = parser.parse_args()
+from parse_cmd_line import parse_args
 
 exp = ""
 equation = []
@@ -92,11 +79,12 @@ def write_json_file(data, output_json_file):
 
 
 # Assign command line parameters to a dictionary for easy program access
-args_dict = vars(args)
+args_dict = parse_args()
 
-input_file = args_dict['input_file']
-output_file = args_dict['output_file']
-png_equation = args_dict['png_image']
+# Assign command line parameters to variables
+input_file = args_dict['-i']
+output_file = args_dict['-o']
+png_equation = args_dict['-png']
 
 output_list = []
 
@@ -112,6 +100,7 @@ if input_file != None:  # None is a python keyword meaning null value
         if output_file != None:
             if '.json' in output_file:
                 write_json_file(output_list, output_file)
+                print(f"{output_file} written to the current working directory")
             else:
                 print("Please ensure the you provide a JSON output file using the '.json' extension")
         else:

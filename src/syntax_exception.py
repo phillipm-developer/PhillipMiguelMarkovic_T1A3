@@ -20,7 +20,7 @@ class SyntaxError(Exception):
                 self.error_message += self.arrow
             
             case ErrorType.Missing_Parentheses:
-                self.error_message += f"Missing closing bracket at column {self.index+1} in"
+                self.error_message += f"Missing closing bracket at column {self.index+1} in "
                 self.get_arrow()
                 self.error_message += self.equation
                 self.error_message += self.arrow

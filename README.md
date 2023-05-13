@@ -87,7 +87,7 @@ The expression evaluator is capable of reading a set of data from an input file 
 
 Each record is read into a data structure called a calculation dictionary. This acts as a workspace from which the app can read the expression to evaluate and the values to substitute into the expression. Once the expression is evaluated, the result is written back into the calculation dictionary.
 
-Once all the evaluations are carried out, the list of calculation dictionaries is then written out to a file suupplied on the command line.
+Once all the evaluations are carried out, the list of calculation dictionaries is then written out to a file supplied on the command line.
 
 The basic logical structure of a calculation dictionary is as follows:
 
@@ -327,6 +327,7 @@ The following files are required to run the evaluate terminal application:
 
 evaluate.sh<br>
 main.py<br>
+parse_cmd_line.py<br>
 expression.py<br>
 syntax_exception.py<br>
 math_exception.py<br>
