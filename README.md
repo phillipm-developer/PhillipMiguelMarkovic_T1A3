@@ -16,6 +16,10 @@ https://github.com/phillipm-developer/PhillipMiguelMarkovic_T1A3
 
 https://trello.com/b/E3EoGLMn/evaluator-terminal-app
 
+# Link to Slide Deck Presentation
+
+https://youtu.be/WaX0oFMU8HI
+
 # Code Style Guide
 
 The expression evauator teminal application adheres to the PEP8 coding standards document (Python Enhancment Proposal 8).
