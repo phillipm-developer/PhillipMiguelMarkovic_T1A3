@@ -357,6 +357,10 @@ class Expression:
     def check_syntax(self, infix_list):
         brackets = []
 
+        # If the infix list is empty, then nothing to check
+        if len(infix_list) == 0:
+            raise SyntaxError(infix_list, 0, ErrorType.Zero_Length_Expression)
+        
         for index, element in enumerate(infix_list):
             if index == 0:
                 if element == ")" or element == "*" or element == "/" or element == "+" or element == "^":

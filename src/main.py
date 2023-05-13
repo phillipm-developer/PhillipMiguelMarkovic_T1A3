@@ -37,11 +37,16 @@ def interactive_mode():
             if calculation_dict['values_obtained'] == False:
                 substitutions = calculation_dict['substitutions']
                 for key in substitutions:
-                    value = input(f"Please enter the value for {key}> ")
+                    value = "not_a_number"
+                    while not equation.is_float(value):
+                        value = input(f"Please enter the value for {key}> ")
 
-                    # Checks if user wants to exit the program
-                    if value.lower() == "quit" or value.lower() == "exit":
-                        return
+                        # Checks if user wants to exit the program
+                        if value.lower() == "quit" or value.lower() == "exit":
+                            return
+
+                        if not equation.is_float(value):
+                            print("Value entered is not a number. Try again.")
 
                     # Assign value to the variable 
                     substitutions[key] = value
@@ -57,6 +62,8 @@ def interactive_mode():
 
         except expression.SyntaxError as err:
             print(err.get_message())
+        except Exception as err:
+            print(err)
 
 # Read and evaluate json file input. 
 def process_json_file(input_json_file):

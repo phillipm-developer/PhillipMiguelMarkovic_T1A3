@@ -3,6 +3,7 @@ from enum import Enum
 class ErrorType(Enum):
     Invalid_Character = 1
     Missing_Parentheses = 2
+    Zero_Length_Expression = 3
 
 class SyntaxError(Exception):
     def __init__(self, infix_list, index, error_type):
@@ -24,6 +25,9 @@ class SyntaxError(Exception):
                 self.get_arrow()
                 self.error_message += self.equation
                 self.error_message += self.arrow
+
+            case ErrorType.Zero_Length_Expression:
+                self.error_message = "Zero length expression - Nothing to evaluate."
 
             case _:
                 pass
