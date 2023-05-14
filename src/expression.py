@@ -5,6 +5,10 @@ from math_exception import MathErrorType
 from syntax_exception import SyntaxError
 from syntax_exception import SyntaxErrorType
 
+# The Expression class is responsible for processing expressions
+# that are passed to it in it's __init__ method. It sets up all the 
+# structures needed to convert the expression into infix, then postfix forms, 
+# then finally evaluates the the expression for a given set of values.
 class Expression:
     def __init__(self, expression):
         self.expression = expression
@@ -204,7 +208,7 @@ class Expression:
         token = ''  # Appended to character by character to form a string
 
         for element in infix_string:
-            if self.is_operator(element):
+            if self.is_operator(element):  # If the character is an operator like '+','-', etc
                 if len(token) > 0:
                     infix_list.append(token)
                     token = ''
@@ -232,40 +236,38 @@ class Expression:
         # Insert parentheses to encompass the operand for a unary minus operator. A unary minus is treated as a 
         # function the way sin & cos are as they only apply to a single operator as well
 
-        stemp = []  # We treat this variable as a stack
-        vtemp = []  # We construct the new list consisting of expression tokens with the parentheses inserted for unary minus (mu)
+        temp_stack = []  # We treat this variable as a stack
+        updated_list = []  # We construct the new list consisting of expression tokens with the parentheses inserted for unary minus (mu)
 
         for index, element in enumerate(infix_list):
             if infix_list[index] == "mu" and infix_list[index+1] != "(":
-                vtemp.append(element)
-                vtemp.append("(")
-                stemp.append("mu")
+                updated_list.append(element)
+                updated_list.append("(")
+                temp_stack.append("mu")
             elif element == "(":
-                vtemp.append(element)
-                stemp.append("ord")
-            elif self.is_binary_operator(element) and len(stemp) > 0 and stemp[-1] == "mu":
-                while len(stemp) > 0 and stemp[-1] == "mu":
-                    vtemp.append(")")
-                    stemp.pop()
+                updated_list.append(element)
+                temp_stack.append("ord")
+            elif self.is_binary_operator(element) and len(temp_stack) > 0 and temp_stack[-1] == "mu":
+                while len(temp_stack) > 0 and temp_stack[-1] == "mu":
+                    updated_list.append(")")
+                    temp_stack.pop()
 
-                vtemp.append(element)
-            elif element == ")" and len(stemp) > 0 and stemp[-1] == "ord":
-                vtemp.append(element)
-                stemp.pop()
-                while (len(stemp) > 0 and stemp[-1] == "mu"):
-                    vtemp.append(")")
-                    stemp.pop()
+                updated_list.append(element)
+            elif element == ")" and len(temp_stack) > 0 and temp_stack[-1] == "ord":
+                updated_list.append(element)
+                temp_stack.pop()
+                while (len(temp_stack) > 0 and temp_stack[-1] == "mu"):
+                    updated_list.append(")")
+                    temp_stack.pop()
             else:
-                vtemp.append(element)
+                updated_list.append(element)
 
-        while len(stemp) > 0:
-            if (stemp[-1] == "mu"):
-                vtemp.append(")")
-            stemp.pop()
+        while len(temp_stack) > 0:
+            if (temp_stack[-1] == "mu"):
+                updated_list.append(")")
+            temp_stack.pop()
 
-        infix_list = vtemp
-
-        return infix_list
+        return updated_list
 
     # Create a postfix list from an infix list
     def create_postfix_list(self, infix_list):
@@ -284,19 +286,16 @@ class Expression:
                     operator_stack.append(element)
                 elif element == ")":
                     while operator_stack[-1] != "(":    # Pop all the stack operators until "("
-                        postfix_list.append(operator_stack[-1])
-                        operator_stack.pop()
+                        postfix_list.append(operator_stack.pop())
                     operator_stack.pop()  # Pop the '(' operator
                 else:
                     while len(operator_stack) > 0 and operator_stack[-1] != "(" and self.precedence_level(operator_stack[-1]) >= self.precedence_level(element):
-                        postfix_list.append(operator_stack[-1])
-                        operator_stack.pop()
+                        postfix_list.append(operator_stack.pop())
 
                     operator_stack.append(element)
 
         while len(operator_stack) > 0:
-            postfix_list.append(operator_stack[-1])
-            operator_stack.pop()
+            postfix_list.append(operator_stack.pop())
 
         return postfix_list
     
@@ -398,4 +397,3 @@ class Expression:
             raise SyntaxError(infix_list, index, SyntaxErrorType.Invalid_Character)
         elif len(bracket_stack) > 0:
             raise SyntaxError(infix_list, index, SyntaxErrorType.Missing_Parentheses)
-

@@ -88,6 +88,10 @@ def write_json_file(data, output_json_file):
     with open(output_json_file, 'w') as f:
         json.dump(data, f)
 
+# Only run eveything below if run directly by python interpreter.
+# Not if this module is imported directly. Useful to test functions 
+# defined in this file.
+#
 if __name__ == "__main__":
     # Assign command line parameters to a dictionary for easy program access
     args_dict = parse_args()
@@ -115,6 +119,7 @@ if __name__ == "__main__":
                 else:
                     print("Please ensure the you provide a JSON output file using the '.json' extension")
             else:
+                # Format the output for display on screen
                 for dict in output_list:
                     row_string = f"EXPR: {dict['equation']}, "
                     variables = dict['substitutions']
@@ -123,7 +128,7 @@ if __name__ == "__main__":
                         variable_string += f"{key}={value}, "
                     row_string += variable_string
                     row_string += "RESULT: " + str(dict['result'])
-                    print(row_string)
+                    print(row_string)  # Print to screen
 
         except FileNotFoundError as err:
             print(err)

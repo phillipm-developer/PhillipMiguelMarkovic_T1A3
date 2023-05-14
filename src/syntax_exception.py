@@ -6,7 +6,8 @@ class SyntaxErrorType(Enum):
     Missing_Parentheses = 2
     Zero_Length_Expression = 3
 
-# Custom SyntaxError exception. Puts together an expressive error message.
+# Custom SyntaxError exception. Puts together an expressive error message 
+# based on the SyntaxErrorType passed in.
 class SyntaxError(Exception):
     def __init__(self, infix_list, index, error_type):  # The index parameter specifies which element is at fault
         self.infix_list = infix_list
@@ -54,6 +55,7 @@ class SyntaxError(Exception):
         self.arrow += "^"
         self.arrow = "\n" + self.arrow
 
+    # Called to retrieve message in the except clause
     def get_message(self):
         return self.error_message
      

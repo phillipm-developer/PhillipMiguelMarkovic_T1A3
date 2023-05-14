@@ -6,7 +6,8 @@ class MathErrorType(Enum):
     Values_Not_Set = 2
     More_Than_One_Variable = 3
 
-# Custom SyntaxError exception. Puts together an expressive error message.
+# Custom SyntaxError exception. Puts together an expressive error message based
+# on the MathErrorType passed in.
 class MathError(Exception):
     def __init__(self, error_type):
         self.error_message = ""
@@ -19,5 +20,6 @@ class MathError(Exception):
             case MathErrorType.More_Than_One_Variable:
                 self.error_message = "Not permitted more than one variable"
 
+    # Called to retrieve message in the except clause
     def get_message(self):
         return self.error_message
