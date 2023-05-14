@@ -7,7 +7,7 @@ def parse_args():
     arg_dict = { "-i" : None, "-o" : None, "-png" : None }
 
     for index, argument in enumerate(argumentList):
-        # If argument is in argument dictioanry
+        # If argument is in argument dictionary
         # & the next element is NOT beyond bounds of argument list
         # & the next element is NOT in the arguument dictionary
         if argument in arg_dict and index+1 < len(argumentList) and not argumentList[index+1] in arg_dict:

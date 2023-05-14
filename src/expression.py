@@ -79,16 +79,19 @@ class Expression:
         # Extract the variables from the eqaution and create a variable dictionary (substitutions)
         substitutions = self.extract_variable_names()
 
+        # Ensures that the expression only has one variable in it
         if len(substitutions) > 1:
             raise MathError(MathErrorType.More_Than_One_Variable)
         
         elif len(substitutions) == 1:
-            var_name = list(substitutions.keys())[0]
+            var_name = list(substitutions.keys())[0]  # Get the variable name
 
             # Calculate for each value in value_list
             for value in value_list:
                 postfix_list = []
                 postfix_list = self.postfix_list.copy()  # Local copy of postfix list
+
+                # Replace each variable with a number in local copy of postfix list
                 for index, element in enumerate(postfix_list):
                     if element == var_name:
                         postfix_list[index] = value
@@ -96,7 +99,7 @@ class Expression:
                 result = self.evaluate(postfix_list)        
                 result_list.append(result)
 
-        return result_list
+        return result_list  # Return list of evaluated values
 
 
     # This returns a calculation dictionary with the result of the calculation
@@ -355,7 +358,7 @@ class Expression:
 
     # Chceks if the string expression is properly formatted, otherwise raise an exception
     def check_syntax(self, infix_list):
-        brackets = []
+        bracket_stack = []
 
         # If the infix list is empty, then nothing to check
         if len(infix_list) == 0:
@@ -366,12 +369,12 @@ class Expression:
                 if element == ")" or element == "*" or element == "/" or element == "+" or element == "^":
                     raise SyntaxError(infix_list, index, SyntaxErrorType.Invalid_Character)
                 elif element == "(":
-                    brackets.append(index)
+                    bracket_stack.append(index)
             elif index > 0:
                 if element == "(":
                     if self.is_number_or_variable(infix_list[index-1]) or infix_list[index-1] == ")":
                         raise SyntaxError(infix_list, index, SyntaxErrorType.Invalid_Character)
-                    brackets.append(index)
+                    bracket_stack.append(index)
                 elif element == "-":
                     if self.is_unary_operator(infix_list[index-1]):
                         raise SyntaxError(infix_list, index, SyntaxErrorType.Invalid_Character)
@@ -385,14 +388,14 @@ class Expression:
                     if infix_list[index-1] == ")" or self.is_unary_operator(infix_list[index-1]) or self.is_number_or_variable(infix_list[index-1]):
                         raise SyntaxError(infix_list, index, SyntaxErrorType.Invalid_Character)
                 elif element == ")":
-                    if infix_list[index-1] == "(" or self.is_binary_operator(infix_list[index-1]) or self.is_unary_operator(infix_list[index-1]) or len(brackets) <= 0:
+                    if infix_list[index-1] == "(" or self.is_binary_operator(infix_list[index-1]) or self.is_unary_operator(infix_list[index-1]) or len(bracket_stack) <= 0:
                         raise SyntaxError(infix_list, index, SyntaxErrorType.Invalid_Character)
-                    brackets.pop()
+                    bracket_stack.pop()
 
         last = len(infix_list) - 1  # Assigning the last index
 
         if self.is_unary_operator(infix_list[last]) or self.is_binary_operator(infix_list[last]) or infix_list[last] == "(":
             raise SyntaxError(infix_list, index, SyntaxErrorType.Invalid_Character)
-        elif len(brackets) > 0:
+        elif len(bracket_stack) > 0:
             raise SyntaxError(infix_list, index, SyntaxErrorType.Missing_Parentheses)
 

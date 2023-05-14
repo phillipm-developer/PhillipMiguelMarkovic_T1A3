@@ -20,6 +20,20 @@ https://trello.com/b/E3EoGLMn/evaluator-terminal-app
 
 https://youtu.be/WaX0oFMU8HI
 
+# Note About Testing
+
+Please note, there are 2 pytest scripts which cover R15 of the Code Requirements. 
+
+The unit tests for the Expression class can be run with the following command:
+
+<span style="color:turquoise">pytest test_expression.py</spon>
+
+The tests that check actual features can be run with the following command:
+
+<span style="color:turquoise">pytest test_features.py</span>
+
+An explanation of each of the unit and feature tests is in the comments above each 'test_' function.
+
 # Code Style Guide
 
 The expression evauator teminal application adheres to the PEP8 coding standards document (Python Enhancment Proposal 8).
@@ -40,7 +54,7 @@ calculation_dict['substitutions'] = substitutions_dict<br><br>
 
 Assigning a dictionary of substitutions (variable names and the values assigned to them) to a calculation dictionary. 
 
-Note the use of '_list' and '_dict' to denote the data collection type and the elements they contain.
+Note the use of '_list' and '_dict' to denote the data collection type and the elements they contain. An exception is made in the case of lists which are handled as if they were stacks, where the last element is either checked or popped off and returned. The suffix '_stack' is used instead of '_list'.
 
 ## Packages and Modules
 
@@ -60,7 +74,7 @@ Mutiple imports are done line by line for clarity. Modules are also imported in 
 * Thirty party module imports
 * Module imports locally developed 
 
-At no point does the terminal app use wildcards(*) in it's imports. This maintains clarity on what resoources are being imported into the namespace.
+At no point does the terminal app use wildcards(*) in it's imports. This maintains clarity on what resources are being imported into the namespace.
 
 ## Naming Conventions (General)
 
@@ -89,9 +103,9 @@ The terminal application that was implemented is an expression evaluator designe
 
 ## File Input and Output
 
-The expression evaluator is capable of reading a set of data from an input file specified on the command line. This allows the app to obtain the multiple expressions to be evaluated and the corresponding variables, as well as the values to be substituted into those values.
+The expression evaluator is capable of reading a set of data from an input file specified on the command line. This allows the app to obtain multiple expressions to be evaluated and the corresponding variables, as well as the values to be substituted into those variables.
 
-Each record is read into a data structure called a calculation dictionary. This acts as a workspace from which the app can read the expression to evaluate and the values to substitute into the expression. Once the expression is evaluated, the result is written back into the calculation dictionary.
+Each record is read into a data structure called a calculation dictionary (calculation_dict). This acts as a workspace from which the app can read the expression to evaluate and the values to substitute into the expression. Once the expression is evaluated, the result is written back into the calculation dictionary.
 
 Once all the evaluations are carried out, the list of calculation dictionaries is then written out to a file supplied on the command line.
 
@@ -117,7 +131,7 @@ This application uses the JSON file formats for all its inputs and outputs. It i
 
 ## Interactive Mode
 
-If no command line parameters are supplied to the app when it is invoked, it will enter interactive mode. This is a simple shell which accepts values. The user will be prompted for an expression which they supply being careful to make sure it is properly formatted.
+If no command line parameters are supplied to the app when it is invoked, it will enter interactive mode. This is a simple shell which accepts expressions and values. The user will be prompted for an expression which they supply being careful to make sure it is properly formatted.
 
 The app will extract the variables from the expression, then prompt the user for a value to substitute into each variable. This information is inserted into a new calculation dictionary object which is then passed to the expression evalator part of the app for processing. It writes the result back into the dictionary. The app then retrieves this result and displays it in the console. The user is then prompted for the next expression. Here is a sample run in interactive mode:
 
@@ -146,19 +160,19 @@ The expression evaluator terminal app supports any number of variables with user
 
 <span style="color:turquoise">e.g. 3\*x+4\*(a-dog)-10\*sin(cat)</span>
 
-The app converts the string expression into a list of tokens called an infix list, where each token becomes an operator or operand. Each operand is either a number or variable.
+The app converts the string expression into a list of tokens called an infix list, where each token becomes either an operator or operand. Each operand is either a number or a variable.
 
-The expression evaluator component has a method which extracts the variables out of an expression and creates 'substitutions_dict' dictionary which is then inserted into the parent calculation dictionary. In this case:
+The expression evaluator component has a method which extracts the variables out of an expression and creates a 'substitutions_dict' dictionary which is then inserted into the parent calculation dictionary. In this case:
 
 <span style="color:turquoise">[{'x' : 'NONE', 'a' : 'NONE', 'dog' : 'NONE', 'cat' : 'NONE'}]</span>
 
-The values are set later, but prior evaluation.
+The values are set later, but prior to evaluation.
 
-## Image File of Plotted Function Generation
+## Image File Generation of Plotted Function
 
-Another unique feature of this app is the ability to generate an image file which is created in the current working directory of the program. The user specifies the -png option followed by the expression you wish to plot.
+Another unique feature of this app is the ability to generate an image file which is created in the current working directory of the program. The user specifies the -png option followed by the expression they wish to plot.
 
-Internally the app will by default (unless otherwise specified) create a list of 100 values in the range -50 to 50. The app will then use the expression submitted on the command line to evaluate each value to produce a list of 100 results. The results are plotted against the initial values. A Portable Network Graphic (PNG) file is generated and stored to the file system.
+Internally the app will by default (unless otherwise specified) create a list of 200 values in the range -100 to 100. The app will then use the expression submitted on the command line to evaluate each value to produce a list of 100 results. The results are plotted against the initial values. A Portable Network Graphic (PNG) file is generated and stored to the file system.
 
 Here is a sample png image for the function y = x^2 generated by the app:
 
@@ -166,26 +180,26 @@ Here is a sample png image for the function y = x^2 generated by the app:
 
 This is accomplished by using a popular third party package called matplotlib. Matplotlib is a plotting library for creating mathematical visualizations.
 
-Each image is generated with its own unique file name. This was achieved by using the built-in module datetime. The file name consists of day, month, year, hr, min, sec and microsecond. This ensures unique filenames are consistently created even if the images are generated in quick succession. The file name for image displayed above is called <span style="color:turquoise">
+Each image is generated with its own unique file name. This was achieved by using the built-in module datetime. The file name consists of day, month, year, hour, minute, second and microsecond. This ensures unique filenames are consistently created even if the images are generated in quick succession. The file name for image displayed above is called <span style="color:turquoise">
 Figure_2023-5-10_16-24-39:372930.png</span>.
 
 # Implementation Plan
 
 The following is an implementation plan for the development of the evaluate terminal appliation. This plan is divided up into the portion of the application that drives it behind the scenes (core), and the features the application offers its users.
 
-The Expression class is the largest and most complex part of the application. It is the component that embodies the expression and evaluates the expression based on user and file input. The features which are visible to the user are built on top of the expession class, and many more features could like wise be added.
+The Expression class is the largest and most complex part of the application. It is the component that embodies the expression and evaluates the expression based on user and file input. The features which are visible to the user are built on top of the Expression class, and many more features could likewise be added.
 
-Implementation of the Expression class is divided up into tasks and sub tasks. The Expression class can be treated like an independant feature in the context of this project plan.
+Implementation of the Expression class is divided up into tasks and sub tasks. The Expression class can be treated as an independant feature in the context of this project plan.
 
 ## Feature: Expression Class Checklist
 
-Development of the Expression class tasks can be split up on a per method basis. Each method can be implemented independently and run with unit tests until its time to merge the code into the repository. However the team is only comprised of one developer. The output of each method servess as the input to the next method in the tasklist below. You cannot implement create_postfix_list without implementing create_infix_list to provide the input parameters.
+Development of the Expression class tasks can be split up on a per method basis. Each method can be implemented independently and run with unit tests until it is time to merge the code into the repository. However the team is only comprised of one developer. The output of each method serves as the input to the next method in the tasklist below. You cannot implement 'create_postfix_list' without first implementing 'create_infix_list' to provide the input parameters.
 
-The only exception to this is the check syntax method which is called by create_infix_list to check the correctness of the expression string supplied by the user. There is some crossover here and the developer would be better suited to developing the check_syntax method after the create infix list and inserting a call to this method into create_infix_list at the appropriate point.
+The only exception to this is the 'check_syntax' method which is called by 'create_infix_list' to check the correctness of the expression string supplied by the user. There is some crossover here and the developer would be better suited to developing the 'check_syntax' method after 'create_infix_list' and inserting a call to this method into 'create_infix_list' at the appropriate point.
 
-All tasks here have an equal high priority as all of the user facing features rely on these tasks being implemented first.
+All tasks here have an equal high priority as all of the user facing features rely on these tasks being implemented up front.
 
-1) Develop create_infix_list method, associated utility methods, error handling and unit tests
+1) Develop 'create_infix_list' method, associated utility methods, error handling and unit tests
 
     This task has 3 essential stages or sub-tasks:
     - Tokenize the user defined expression string
@@ -195,17 +209,17 @@ All tasks here have an equal high priority as all of the user facing features re
     Duration: 1 day<br>
     Priority: High
 
-2) Develop check_syntax method, associated utility methods, error handling and unit tests
+2) Develop 'check_syntax' method, associated utility methods, error handling and unit tests
 
     Duration: 1 day<br>
     Priority: High
 
-3) Develop create_postfix_list, associated utility methods, error handling and unit tests
+3) Develop 'create_postfix_list', associated utility methods, error handling and unit tests
 
     Duration: 1 day<br>
     Priority: High
 
-4) Develop evaluate method, associated utility methods, error handling and unit tests
+4) Develop 'evaluate' method, associated utility methods, error handling and unit tests
 
     Duration: 6 hours<br>
     Priority: High
@@ -259,7 +273,7 @@ This feature should only be implemented once file processing has been developed,
 
 5) Display an error message if the value submitted is not valid
 
-6) Create a data structue to contain this initial data to submit to the Expression object. The result is written to the structure and passed back.
+6) Create a data structue (calculation dictionary) to contain this initial data to submit to the Expression object. The result is written to the structure and passed back.
 
 7) Display the result to screen then reprompt user for an expression
 
@@ -297,11 +311,11 @@ Once implemented, this feature allows users to visualize their expressions.
 
 2) Write a function to plot and save the function as an image file in PNG format
 
-3) Restrict expressions to single variables, otherwise it can't be plotted on a 2D cartesian plane.
+3) Restrict expressions to single variables, otherwise it cannot be plotted on a 2D cartesian plane.
 
 4) Write a method in the Expression class to do a bulk evaluate on a list of values and return a list of results.
 
-5) Implement a scheme for creating unique filenames using the python built-in module datetime.
+5) Implement a scheme for creating unique filenames using the python built-in module 'datetime'.
 
 6) Implement error handling and display appropriate error messages. 
 
@@ -328,7 +342,7 @@ Trello is the project management platform selected to track this implementation 
 
 ## Installation
 
-The following files are required to run the evaluate terminal application:
+The following files are required for the general user to run the evaluate terminal application:
 
 * evaluate.sh
 * main.py
@@ -339,13 +353,13 @@ The following files are required to run the evaluate terminal application:
 * plot_equation.py
 * input.json
 
-These files are available in PhillipMiguelMarkovic_T1A3.zip. Create or choose a designated folder for the app, then extract these files from the archive.
+These files are available in PhillipMiguelMarkovic_T1A3.zip. Create or choose a designated folder for the app, then extract these files from the archive into the folder.
 
 ## Dependencies
 
 These files require Python 3.10 or higher, and the python modules pytest and matplotlib. Run the evaluate app from your Linux or WSL (Windows Subsystem for Linux) terminal in the following manner. Move into your nominated directory and run the following:
 
-./evaluate.sh
+<span style="color:turquoise">./evaluate.sh</span>
 
 As part of the initial setup it checks for these dependencies and will display an error to the console advising the user which dependencies are not available. If all 3 are installed the evaluate app will start up in interactive mode.
 
@@ -357,7 +371,7 @@ Alternatively you can use Linux (preferably Ubuntu).
 
 Desktop PC or laptop. I recommend that the hardware be no older than 2019 as this is the specification recommended by Coder Academy to their cohorts for their courses (Coder Academy FAQ n.d.). This app was developed and tested on an MSI 13th Gen Intel(R) Core(TM) i7-13620H 2.40 GHz laptop so the hardware requirement is reasonable.
 
-So to summarize more generally the minimum requirements are:
+So to summarize more specifically, the minimum requirements are:
 
 Minimum Windows specifications
 * 16GB RAM
@@ -370,7 +384,7 @@ Minimum Mac specifications:
 * No more than 4 years old
 * OS Big Sur (minimum)
 
-The Mac specification is specified as everyone has different preferences as users may want to run the terminal app on their Mac. The functionality of the app is not guaranteed and the evaluate shell script is unlikely to run on a Mac.
+The Mac specification is provided as everyone has different preferences and users may want to run the terminal app on their Mac. The functionality of the app is not guaranteed and the evaluate shell script is unlikely to run on a Mac.
 
 ## Usage
 
@@ -378,7 +392,7 @@ The following instructions demonstrate how to use the terminal application with 
 
 <span style="color:turquoise">./evaluate.sh</span>
 
-If the application is invoked without any arguments supplied on the command line, the terminal app will enter interactive mode. The user is provided with a simple shell and is prompted to supply expressions with variables. The ap will then prompt the user for values for each of the variables in the expression. Once the last value is supplied, the expression is evaluated and the result is displayed as shell output. The user is then prompted for the next expression.
+If the application is invoked without any arguments supplied on the command line, the terminal app will enter interactive mode. The user is provided with a simple shell and is prompted to supply expressions with variables. The app will then prompt the user for values for each of the variables in the expression. Once the last value is supplied, the expression is evaluated and the result is displayed as shell output. The user is then prompted for the next expression.
 
     phillip@MSI:~/projects/PhillipMiguelMarkovic_T1A3/src$ ./evaluate.sh 
     Please enter an expression> x^2
@@ -418,7 +432,7 @@ By providing and additional parameter -o followed by the output file name, the r
 
 <span style="color:turquoise">./evaluate.sh -o output.json</span>
 
-Supplying and output file without a corresponding input  file is not permitted and an error message will be displayed.
+Supplying and output file without a corresponding input file is not permitted and an error message will be displayed.
 
     phillip@MSI:~/projects/PhillipMiguelMarkovic_T1A3/src$ ./evaluate.sh -o output.json 
     You must provide a corresponding input file '-i' in order to write to output.json
@@ -432,4 +446,4 @@ The -png option allows the user to specify an equation for the purpose of plotti
     The figure has been saved to Figure_2023-5-11_22-53-20:30463.png
     phillip@MSI:~/projects/PhillipMiguelMarkovic_T1A3/src$
 
-There is no need to specify an output filename. It ia automaticallly generated by the application.
+There is no need to specify an output filename. It is automaticallly generated by the application.

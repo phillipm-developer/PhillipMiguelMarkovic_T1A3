@@ -139,8 +139,6 @@ if __name__ == "__main__":
             print(err.get_message())
         except ValueError as err:
             print(err)
-        except AttributeError as err:
-            print(err)
 
     elif output_file != None:
         print(f"You must provide a corresponding input file '-i' in order to write to {output_file}")
